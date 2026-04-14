@@ -568,9 +568,6 @@ function HomeScreen({ state, onEarnQr }) {
             <h3 className="mt-4 text-3xl font-semibold">
               {formatPoints(state.points)} pts
             </h3>
-            <p className="text-sm text-white/60">
-              Approx. ₱{formatPoints(Math.round(state.points * 0.08))}
-            </p>
             <button
               className="mt-6 flex w-full items-center justify-between rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-sm text-white transition"
               onClick={() => navigate("/wallet")}
