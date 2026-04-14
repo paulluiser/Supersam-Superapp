@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #fbe106;
+  color: #010812;
+}
+
+.app-shell .text-white {
+  color: #010812 !important;
+}
+
+.app-shell .text-white\/80 {
+  color: rgba(1, 8, 18, 0.8) !important;
+}
+
+.app-shell .text-white\/70 {
+  color: rgba(1, 8, 18, 0.7) !important;
+}
+
+.app-shell .text-white\/60 {
+  color: rgba(1, 8, 18, 0.6) !important;
+}
+
+.app-shell .text-white\/50 {
+  color: rgba(1, 8, 18, 0.5) !important;
+}
+
+.app-shell .bg-brand-dark\/90 {
+  background-color: #fffeec !important;
+}
+
+.app-shell .bg-white\/5 {
+  background-color: #fffeec !important;
+}
+
+.app-shell .bg-white\/10 {
+  background-color: #ffffff !important;
+}
+
+.app-shell .border-white\/10 {
+  border-color: rgba(1, 8, 18, 0.1) !important;
+}
+
+.app-shell .border-white\/15 {
+  border-color: rgba(1, 8, 18, 0.15) !important;
+}
+
+.app-shell .border-white\/20 {
+  border-color: rgba(1, 8, 18, 0.2) !important;
+}
+
+.app-shell .text-brand-dark {
+  color: #010812 !important;
+}
+
+.app-shell .text-brand-gold {
+  color: #010812 !important;
+}
+
+.app-shell .text-emerald-300 {
+  color: #010812 !important;
+}
+
+.app-shell .text-rose-200 {
+  color: #010812 !important;
+}
+
+.app-shell .glass-card * {
+  color: #010812;
+}
+
+.app-shell .font-display {
+  color: #010812 !important;
+}
+
+.app-shell input,
+.app-shell textarea {
+  color: #010812;
+}
+
+.app-shell input::placeholder,
+.app-shell textarea::placeholder {
+  color: rgba(1, 8, 18, 0.5);
+}
+
+.app-shell * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.safe-bottom {
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+}
+
+.safe-bottom-nav {
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: #fffeec;
+}
+
+.glass-card {
+  background: #ffffff;
+  border: 1px solid rgba(1, 8, 18, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+
+.toast {
+  animation: fadeUp 0.25s ease-out;
+}
