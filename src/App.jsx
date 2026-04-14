@@ -920,16 +920,16 @@ function BuyPointsScreen({ onPurchase, transactions }) {
   const recent = useMemo(() => transactions.slice(0, 5), [transactions]);
 
   return (
-    <div className="space-y-6 animate-fadeUp">
+    <div className="space-y-6 animate-fadeUp text-black">
       <header className="space-y-1">
-        <h2 className="font-display text-2xl">Buy Points</h2>
-        <p className="text-sm text-white/60">
+        <h2 className="font-display text-2xl text-black">Buy Points</h2>
+        <p className="text-sm text-black/60">
           Add points instantly with trusted payment partners.
         </p>
       </header>
 
       <section className="space-y-3">
-        <h3 className="text-xs tracking-[0.25em] text-white/60">
+        <h3 className="text-xs tracking-[0.25em] text-black/60">
           Bundles
         </h3>
         <div className="grid gap-3">
@@ -947,9 +947,9 @@ function BuyPointsScreen({ onPurchase, transactions }) {
               >
                 <div>
                   <p className="text-sm font-semibold">{bundle.label}</p>
-                  <p className="text-xs text-white/60">{bundle.price}</p>
+                  <p className="text-xs text-black/60">{bundle.price}</p>
                 </div>
-                <Coins className={active ? "text-brand-gold" : "text-white/50"} />
+                <Coins className={active ? "text-brand-gold" : "text-black/50"} />
               </button>
             );
           })}
@@ -957,7 +957,7 @@ function BuyPointsScreen({ onPurchase, transactions }) {
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-xs tracking-[0.25em] text-white/60">
+        <h3 className="text-xs tracking-[0.25em] text-black/60">
           Payment Method
         </h3>
         <div className="space-y-2">
@@ -976,7 +976,7 @@ function BuyPointsScreen({ onPurchase, transactions }) {
                 <span className="text-sm">{method.label}</span>
                 <BadgeCheck
                   size={16}
-                  className={active ? "text-brand-gold" : "text-white/50"}
+                  className={active ? "text-brand-gold" : "text-black/50"}
                 />
               </button>
             );
@@ -993,13 +993,13 @@ function BuyPointsScreen({ onPurchase, transactions }) {
 
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs tracking-[0.25em] text-white/60">
+          <h3 className="text-xs tracking-[0.25em] text-black/60">
             Transaction History
           </h3>
         </div>
         <div className="space-y-3">
           {recent.map((tx) => (
-            <TransactionCard key={tx.id} transaction={tx} />
+            <TransactionCard key={tx.id} transaction={tx} tone="dark" />
           ))}
         </div>
       </section>
@@ -1138,12 +1138,13 @@ function QuickAction({ icon, label, onClick }) {
   );
 }
 
-function TransactionCard({ transaction }) {
+function TransactionCard({ transaction, tone = "light" }) {
   const isPositive = transaction.points > 0;
+  const dateTone = tone === "dark" ? "text-black/60" : "text-white/60";
   return (
     <div className="glass-card flex items-center justify-between rounded-2xl px-4 py-4 shadow-soft">
       <div className="space-y-1">
-        <p className="text-xs text-white/60">{transaction.date}</p>
+        <p className={`text-xs ${dateTone}`}>{transaction.date}</p>
         <p className="text-sm">{transaction.description}</p>
       </div>
       <div
