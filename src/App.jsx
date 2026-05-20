@@ -1188,9 +1188,9 @@ function NewDesignSite({ state, onSelectReward, onOpenPocketItem }) {
               </p>
             </section>
             <section className="rounded-[1.5rem] border border-[#ead47a] bg-white p-5">
-              <RewardsSectionHeader title="Pocket" action={`${state.wallet.length} ready`} onClick={() => setActiveView("Pocket")} />
+              <RewardsSectionHeader title="Pocket" action={`${unclaimedVouchers.length} ready`} onClick={() => setActiveView("Pocket")} />
               <div className="mt-3 divide-y divide-[#f0df91]">
-                {state.wallet.map((item) => (
+                {unclaimedVouchers.map((item) => (
                   <button
                     key={item.id}
                     className="flex w-full items-center justify-between gap-3 py-3 text-left"
@@ -1342,9 +1342,9 @@ function NewDesignSite({ state, onSelectReward, onOpenPocketItem }) {
               </div>
             </section>
             <section className="rounded-[1.5rem] border border-[#ead47a] bg-white p-5">
-              <RewardsSectionHeader title="Pocket" action={`${state.wallet.length} ready`} onClick={() => setActiveView("Pocket")} />
+              <RewardsSectionHeader title="Pocket" action={`${unclaimedVouchers.length} ready`} onClick={() => setActiveView("Pocket")} />
               <div className="mt-2 divide-y divide-[#f0df91]">
-                {state.wallet.map((item) => (
+                {unclaimedVouchers.map((item) => (
                   <div key={item.id} className="py-3">
                     <p className="text-sm font-black">{item.title}</p>
                     <p className="mt-1 text-xs font-semibold text-[#7b6b32]">
