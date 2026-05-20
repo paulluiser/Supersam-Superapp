@@ -98,6 +98,14 @@ body {
   padding-bottom: calc(2rem + env(safe-area-inset-bottom));
 }
 
+.app-content-with-nav {
+  padding-bottom: calc(9rem + env(safe-area-inset-bottom));
+}
+
+.new-design-content {
+  padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+}
+
 .safe-bottom-nav {
   padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
 }
@@ -105,6 +113,20 @@ body {
 .app-shell {
   min-height: 100vh;
   background: #fffeec;
+}
+
+.app-shell .new-design .text-white,
+.app-shell .new-design .text-white\/75,
+.app-shell .new-design .text-white\/70 {
+  color: #ffffff !important;
+}
+
+.app-shell .new-design .text-white\/75 {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.app-shell .new-design .text-white\/70 {
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .glass-card {
