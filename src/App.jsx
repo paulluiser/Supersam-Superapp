@@ -513,7 +513,7 @@ function LoginScreen({ onLogin }) {
           className="w-full rounded-2xl border border-white/15 bg-white/5 py-3 text-sm font-semibold text-brand-dark transition active:scale-95"
           onClick={() => navigate("/new-design")}
         >
-          Explore new design
+          Enter SuperApp V2
         </button>
         <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-xs text-white/60">
           By continuing, you agree to the Supersam Loyalty membership terms.
@@ -1002,429 +1002,357 @@ function WalletScreen({ wallet, onOpen }) {
   );
 }
 
-function NewDesignSite({ state, onSelectReward, onOpenPocketItem }) {
+function NewDesignSite({ state }) {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState("Home");
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [query, setQuery] = useState("");
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const previewTransactions = state.transactions.slice(0, 3);
-  const progressPercent = Math.min((state.points / 18000) * 100, 100);
-  const nextReward = Math.max(18000 - state.points, 0);
-  const filteredRewards = rewards.filter((reward) => {
-    const matchesCategory =
-      activeCategory === "All" || reward.category === activeCategory;
-    const matchesQuery = reward.title.toLowerCase().includes(query.toLowerCase());
-    return matchesCategory && matchesQuery;
-  });
-  const unclaimedVouchers = state.wallet.filter((item) =>
-    ["Ready", "Scheduled"].includes(item.status)
-  );
-  const offers = [
-    {
-      reward: rewards[1],
-      title: "Featured reward",
-      detail: "Truffle Mushroom Pizza is ready to redeem with your points.",
-      icon: Star
-    },
-    {
-      reward: rewards[2],
-      title: "Birthday month treat",
-      detail: "Redeem one dessert from the rewards menu.",
-      icon: Gift
-    }
-  ];
-  const notifications = [
-    {
-      title: "Double points today",
-      detail: "Scan your member QR at any Supersam branch before 2 PM.",
-      time: "Now",
-      action: "Scan"
-    },
-    {
-      title: "Reward expiring soon",
-      detail: "Chef's Table Voucher expires on May 20, 2026.",
-      time: "1h",
-      action: "Pocket"
-    },
-    {
-      title: "New dessert reward",
-      detail: "Mango Pavlova is now available in the rewards menu.",
-      time: "Yesterday",
-      action: "Rewards"
-    }
-  ];
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeTab, setActiveTab] = useState("Home");
+  const [message, setMessage] = useState("");
+
   const tabs = [
     { label: "Home", icon: Home },
-    { label: "Scan", icon: ScanLine },
-    { label: "Rewards", icon: Star },
-    { label: "Pocket", icon: Wallet },
-    { label: "Profile", icon: User }
+    { label: "Transactions", icon: Ticket },
+    { label: "QR", icon: QrCode },
+    { label: "Ledger", icon: Wallet },
+    { label: "My Account", icon: User }
   ];
-  const titleByView = {
-    Home: "Good afternoon",
-    Scan: "Scan to earn",
-    Rewards: "Rewards",
-    Pocket: "Pocket",
-    Profile: "Account"
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setMessage("");
+    setIsAuthenticated(true);
   };
 
-  return (
-    <main className="new-design -mx-5 min-h-screen bg-[#fff8d8] pb-28 text-[#221b05]">
-      <header className="sticky top-0 z-30 border-b border-[#ead47a] bg-[#fff8d8]/95 px-5 pb-4 pt-5 backdrop-blur">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <SupersamRewardsMark />
+  if (isAuthenticated) {
+    return (
+      <main className="new-design -mx-5 min-h-screen bg-[#11100b] pb-28 text-[#f8f5ec]">
+        <header className="sticky top-0 z-30 border-b border-[#f3c437]/20 bg-[#11100b]/95 px-5 pb-4 pt-5 backdrop-blur">
+          <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#8a6500]">
-                Supersam Rewards
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#f3c437]">
+                Supersam SuperApp
               </p>
-              <h1 className="mt-1 text-2xl font-black">{titleByView[activeView]}</h1>
+              <h1 className="mt-1 text-2xl font-black text-white">{activeTab}</h1>
             </div>
-          </div>
-          <button
-            className="relative grid h-10 w-10 place-items-center rounded-full border border-[#ead47a] bg-white text-[#221b05] shadow-sm"
-            aria-label="Notifications"
-            onClick={() => setNotificationsOpen(true)}
-          >
-            <Bell size={18} strokeWidth={2.25} />
-            <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-[#f3c437] ring-2 ring-white" />
-          </button>
-        </div>
-      </header>
-
-      <section className="space-y-5 px-5 pt-5">
-        {activeView === "Home" && (
-          <>
-            <section className="overflow-hidden rounded-[1.75rem] bg-[#f3c437] text-[#221b05] shadow-soft">
-              <div className="p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold text-[#6f5306]">
-                      Hello, {state.user.name.split(" ")[0]}
-                    </p>
-                    <div className="mt-2 flex items-baseline gap-2">
-                      <span className="text-5xl font-black leading-none">
-                        {formatPoints(state.points)}
-                      </span>
-                      <span className="text-lg font-black text-[#6f5306]">pts</span>
-                    </div>
-                  </div>
-                  <span className="rounded-full bg-white px-3 py-2 text-xs font-black text-[#8a6500]">
-                    {state.user.tier}
-                  </span>
-                </div>
-                <div className="mt-5">
-                  <div className="flex items-center justify-between text-xs font-bold text-[#6f5306]">
-                    <span>{formatPoints(nextReward)} pts to Signature perk</span>
-                    <span>{Math.round(progressPercent)}%</span>
-                  </div>
-                  <div className="mt-2 h-3 rounded-full bg-white/55">
-                    <div
-                      className="h-full rounded-full bg-[#221b05]"
-                      style={{ width: `${progressPercent}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="border-t border-[#d4a91a] bg-[#221b05]">
-                <button
-                  className="flex w-full items-center justify-center gap-2 py-4 text-sm font-black text-white"
-                  onClick={() => setActiveView("Scan")}
-                >
-                  <ScanLine size={18} /> Scan in store
-                </button>
-              </div>
-            </section>
-
-            <div className="grid grid-cols-3 gap-3">
-              <RewardsAction icon={<ScanLine size={19} />} label="Scan" onClick={() => setActiveView("Scan")} />
-              <RewardsAction icon={<Gift size={19} />} label="Rewards" onClick={() => setActiveView("Rewards")} />
-              <RewardsAction icon={<Wallet size={19} />} label="Pocket" onClick={() => setActiveView("Pocket")} />
-            </div>
-
-            <RewardsSectionHeader title="For you" action="See rewards" onClick={() => setActiveView("Rewards")} />
-            <div className="grid gap-3">
-              {offers.map((offer) => {
-                const Icon = offer.icon;
-                return (
-                  <button
-                    key={offer.title}
-                    className="flex items-center gap-4 rounded-[1.35rem] border border-[#ead47a] bg-white p-4 text-left shadow-sm"
-                    onClick={() => onSelectReward(offer.reward)}
-                  >
-                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#fff0a7] text-[#8a6500]">
-                      <Icon size={21} strokeWidth={2.25} />
-                    </div>
-                    <div>
-                      <h2 className="text-sm font-black">{offer.title}</h2>
-                      <p className="mt-1 text-xs font-semibold leading-5 text-[#7b6b32]">
-                        {offer.detail}
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            <RewardsSectionHeader title="Recent activity" action="History" onClick={() => setActiveView("Profile")} />
-            <div className="space-y-3">
-              {previewTransactions.map((transaction) => (
-                <RewardsTransaction key={transaction.id} transaction={transaction} />
-              ))}
-            </div>
-          </>
-        )}
-
-        {activeView === "Scan" && (
-          <div className="space-y-4">
-            <section className="rounded-[1.75rem] bg-white p-5 text-center shadow-soft">
-              <div className="mx-auto w-fit rounded-[1.4rem] bg-[#fff8d8] p-4">
-                <QrPlaceholder value="SS-REWARDS-2045" size={172} />
-              </div>
-              <h2 className="mt-5 text-xl font-black">Scan to earn points</h2>
-              <p className="mx-auto mt-2 max-w-[18rem] text-sm font-semibold leading-6 text-[#7b6b32]">
-                Present this code before checkout so staff can add points to your account.
-              </p>
-            </section>
-            <section className="rounded-[1.5rem] border border-[#ead47a] bg-white p-5">
-              <RewardsSectionHeader title="Pocket" action={`${unclaimedVouchers.length} ready`} onClick={() => setActiveView("Pocket")} />
-              <div className="mt-3 divide-y divide-[#f0df91]">
-                {unclaimedVouchers.map((item) => (
-                  <button
-                    key={item.id}
-                    className="flex w-full items-center justify-between gap-3 py-3 text-left"
-                    onClick={() => onOpenPocketItem(item)}
-                  >
-                    <div>
-                      <p className="text-sm font-black">{item.title}</p>
-                      <p className="mt-1 text-xs font-semibold text-[#7b6b32]">{item.code}</p>
-                    </div>
-                    <span className="rounded-full bg-[#fff0a7] px-3 py-1 text-xs font-black text-[#8a6500]">
-                      {item.status}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </section>
-          </div>
-        )}
-
-        {activeView === "Rewards" && (
-          <>
-            <section className="rounded-[1.5rem] bg-[#f3c437] p-5 text-[#221b05] shadow-soft">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#6f5306]">
-                Reward store
-              </p>
-              <h2 className="mt-2 text-2xl font-black">Turn points into favorites.</h2>
-              <p className="mt-2 text-sm font-semibold leading-6 text-[#6f5306]">
-                You have {formatPoints(state.points)} points available today.
-              </p>
-            </section>
-            <div className="rounded-[1.5rem] border border-[#ead47a] bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-3">
-                <Filter size={16} strokeWidth={2.35} className="text-[#8a6500]" />
-                <input
-                  className="w-full border-0 bg-transparent p-0 text-sm font-semibold text-[#221b05] placeholder:text-[#7b6b32] focus:ring-0"
-                  placeholder="Search rewards"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                />
-              </div>
-              <div className="mt-4 flex gap-2 overflow-x-auto">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    className={`shrink-0 rounded-full px-3 py-2 text-xs font-black ${
-                      activeCategory === category
-                        ? "bg-[#221b05] text-white"
-                        : "border border-[#ead47a] bg-white text-[#7b6b32]"
-                    }`}
-                    onClick={() => setActiveCategory(category)}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {filteredRewards.map((reward) => (
-                <button
-                  key={reward.id}
-                  className="overflow-hidden rounded-[1.35rem] border border-[#ead47a] bg-white text-left shadow-sm"
-                  onClick={() => onSelectReward(reward)}
-                >
-                  <img src={reward.image} alt={reward.title} className="h-28 w-full object-cover" />
-                  <div className="p-3">
-                    <p className="min-h-10 text-sm font-black leading-5">{reward.title}</p>
-                    <div className="mt-3 flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-[#7b6b32]">{reward.category}</span>
-                      <span className="rounded-full bg-[#fff0a7] px-2 py-1 text-[11px] font-black text-[#8a6500]">
-                        {formatPoints(reward.points)}
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </>
-        )}
-
-        {activeView === "Pocket" && (
-          <div className="space-y-5">
-            <section className="rounded-[1.5rem] bg-[#f3c437] p-5 text-[#221b05] shadow-soft">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#6f5306]">
-                Voucher pocket
-              </p>
-              <h2 className="mt-2 text-2xl font-black">Redeemed, not yet claimed.</h2>
-              <p className="mt-2 text-sm font-semibold leading-6 text-[#6f5306]">
-                Your redeemed vouchers stay here until they are shown and claimed in-store.
-              </p>
-            </section>
-
-            <section className="rounded-[1.5rem] border border-[#ead47a] bg-white p-5 shadow-sm">
-              <RewardsSectionHeader title="Unclaimed vouchers" action={`${unclaimedVouchers.length} ready`} onClick={() => setActiveView("Scan")} />
-              <div className="mt-3 divide-y divide-[#f0df91]">
-                {unclaimedVouchers.map((item) => (
-                  <button
-                    key={item.id}
-                    className="flex w-full items-center justify-between gap-3 py-4 text-left"
-                    onClick={() => onOpenPocketItem(item)}
-                  >
-                    <div>
-                      <p className="text-sm font-black">{item.title}</p>
-                      <p className="mt-1 text-xs font-semibold text-[#7b6b32]">
-                        Expires {formatDate(item.expires)} · {item.code}
-                      </p>
-                    </div>
-                    <span className="rounded-full bg-[#fff0a7] px-3 py-1 text-xs font-black text-[#8a6500]">
-                      {item.status}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </section>
-          </div>
-        )}
-
-        {activeView === "Profile" && (
-          <div className="space-y-4">
-            <section className="rounded-[1.75rem] bg-[#f3c437] p-5 text-[#221b05] shadow-soft">
-              <div className="flex flex-col items-center text-center">
-                <div className="grid h-20 w-20 place-items-center rounded-full bg-white text-[#8a6500]">
-                  <User size={28} strokeWidth={2.2} />
-                </div>
-                <h2 className="mt-4 text-xl font-black">{state.user.name}</h2>
-                <p className="mt-1 text-sm font-semibold text-[#6f5306]">{state.user.email}</p>
-              </div>
-            </section>
-            <section className="rounded-[1.5rem] border border-[#ead47a] bg-white p-5">
-              <div className="space-y-3 text-sm">
-                <RewardsProfileRow label="Tier" value={state.user.tier} />
-                <RewardsProfileRow label="Member since" value={formatDate(state.user.memberSince)} />
-                <RewardsProfileRow label="Lifetime points" value={formatPoints(state.user.lifetimePoints)} />
-                <RewardsProfileRow label="Region" value={state.user.region} />
-                <RewardsProfileRow label="Birthday" value={formatDate(state.user.birthday)} />
-              </div>
-            </section>
-            <section className="rounded-[1.5rem] border border-[#ead47a] bg-white p-5">
-              <RewardsSectionHeader title="Activity" action="Latest" onClick={() => setActiveView("Home")} />
-              <div className="mt-2 divide-y divide-[#f0df91]">
-                {state.transactions.slice(0, 5).map((transaction) => (
-                  <div key={transaction.id} className="py-3">
-                    <p className="text-sm font-black">{transaction.description}</p>
-                    <p className="mt-1 text-xs font-semibold text-[#7b6b32]">
-                      {formatDate(transaction.date)} · {transaction.points > 0 ? "+" : "-"}
-                      {formatPoints(Math.abs(transaction.points))} pts
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-            <section className="rounded-[1.5rem] border border-[#ead47a] bg-white p-5">
-              <RewardsSectionHeader title="Pocket" action={`${unclaimedVouchers.length} ready`} onClick={() => setActiveView("Pocket")} />
-              <div className="mt-2 divide-y divide-[#f0df91]">
-                {unclaimedVouchers.map((item) => (
-                  <div key={item.id} className="py-3">
-                    <p className="text-sm font-black">{item.title}</p>
-                    <p className="mt-1 text-xs font-semibold text-[#7b6b32]">
-                      Expires {formatDate(item.expires)} · {item.code}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
             <button
-              className="w-full rounded-full bg-[#1d2a21] py-3 text-sm font-black text-white"
-              onClick={() => navigate("/login")}
+              className="rounded-full border border-[#f3c437]/35 bg-[#f3c437] px-4 py-2 text-xs font-black text-[#11100b] shadow-sm"
+              onClick={() => setIsAuthenticated(false)}
             >
-              Return to classic app
+              Logout
             </button>
           </div>
-        )}
+        </header>
+
+        <section className="px-5 pt-5">
+          {activeTab === "Home" && <V2HomeTab state={state} />}
+          {activeTab === "Transactions" && <V2TransactionsTab transactions={state.transactions} />}
+          {activeTab === "QR" && <V2QrTab user={state.user} />}
+          {activeTab === "Ledger" && <V2LedgerTab state={state} />}
+          {activeTab === "My Account" && <V2AccountTab state={state} />}
+        </section>
+
+        <nav className="fixed bottom-0 left-0 right-0 z-40 mx-auto max-w-md border-t border-[#f3c437]/20 bg-[#18150d] px-3 pb-5 pt-3 shadow-[0_-12px_28px_rgba(0,0,0,0.35)]">
+          <div className="grid grid-cols-5 gap-1">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.label;
+              return (
+                <button
+                  key={tab.label}
+                  className={`flex min-h-[4rem] flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-black ${
+                    isActive ? "bg-[#f3c437] text-[#11100b]" : "text-[#f8f5ec]/55"
+                  }`}
+                  onClick={() => setActiveTab(tab.label)}
+                >
+                  <Icon size={19} strokeWidth={isActive ? 2.6 : 2.1} />
+                  <span className="leading-tight">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      </main>
+    );
+  }
+
+  return (
+    <main className="new-design -mx-5 min-h-screen bg-[#11100b] px-5 py-6 text-[#f8f5ec]">
+      <header className="flex items-center justify-between">
+        <h1 className="text-xl font-black text-white">SuperApp V2</h1>
+        <button
+          className="rounded-full border border-[#f3c437]/35 px-4 py-2 text-xs font-black text-[#f3c437]"
+          onClick={() => navigate("/login")}
+        >
+          Classic
+        </button>
+      </header>
+
+      <section className="mt-10">
+        <div className="overflow-hidden rounded-[1.75rem] border border-[#f3c437]/25 bg-[#1a1710] shadow-soft">
+          <div className="border-b border-[#f3c437]/20 bg-[#f3c437] p-5 text-[#11100b]">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-black/55">
+              Supersam member pass
+            </p>
+            <h2 className="mt-3 text-3xl font-black leading-tight">Enter the V2 mock app.</h2>
+            <p className="mt-2 text-sm font-bold leading-6 text-black/65">
+              Auth is mocked for preview. Tap login to go straight into the app.
+            </p>
+          </div>
+
+          {message && (
+            <div className="mx-5 mt-5 rounded-2xl border border-[#f3c437]/35 bg-[#242015] px-4 py-3 text-sm font-semibold text-[#f3c437]">
+              {message}
+            </div>
+          )}
+
+          <form className="space-y-4 p-5" onSubmit={handleSubmit} noValidate>
+            <div className="rounded-[1.25rem] border border-[#f3c437]/20 bg-[#11100b] p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f3c437]">
+                    Mock profile
+                  </p>
+                  <p className="mt-2 text-lg font-black text-white">{state.user.name}</p>
+                  <p className="mt-1 text-sm font-semibold text-[#f8f5ec]/55">{state.user.email}</p>
+                </div>
+                <div className="grid h-14 w-14 place-items-center rounded-full bg-[#f3c437] text-[#11100b]">
+                  <Crown size={24} strokeWidth={2.25} />
+                </div>
+              </div>
+            </div>
+            <button
+              className="w-full rounded-2xl bg-[#f3c437] py-4 text-sm font-black text-[#11100b] transition active:scale-95"
+              type="submit"
+            >
+              Login
+            </button>
+          </form>
+
+          <div className="flex border-t border-[#f3c437]/20 text-center text-sm font-black">
+            <button
+              className="flex-1 px-3 py-4 text-[#f8f5ec]/65"
+              onClick={() => setMessage("Sign up is mocked in this V2 preview.")}
+            >
+              Sign up
+            </button>
+            <button
+              className="flex-1 border-l border-[#f3c437]/20 px-3 py-4 text-[#f8f5ec]/65"
+              onClick={() => setMessage("Password reset is mocked in this V2 preview.")}
+            >
+              Forgot password
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function V2HomeTab({ state }) {
+  const banners = [
+    {
+      title: "Double points lunch",
+      detail: "Earn 2x points at Supersam Bonifacio from 11 AM to 2 PM.",
+      image:
+        "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      title: "Chef's weekend table",
+      detail: "Redeem signature dishes with points at participating branches.",
+      image:
+        "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80"
+    }
+  ];
+
+  return (
+    <div className="space-y-5 animate-fadeUp">
+      <section className="overflow-hidden rounded-[1.5rem] border border-[#f3c437]/20 bg-[#f3c437] text-[#11100b] shadow-soft">
+        <div className="p-5">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-black/55">
+            Total available points
+          </p>
+          <div className="mt-3 flex items-end justify-between gap-3">
+            <div>
+              <p className="text-5xl font-black leading-none">{formatPoints(state.points)}</p>
+              <p className="mt-2 text-sm font-bold text-black/60">{state.user.tier} member</p>
+            </div>
+            <Wallet size={30} strokeWidth={2.3} />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 border-t border-black/15 bg-[#11100b] text-[#f8f5ec]">
+          <div>
+            <p className="px-4 pt-4 text-[11px] font-black uppercase tracking-[0.16em] text-[#f3c437]">
+              Lifetime
+            </p>
+            <p className="px-4 pb-4 pt-1 text-lg font-black">{formatPoints(state.user.lifetimePoints)}</p>
+          </div>
+          <div className="border-l border-[#f3c437]/20">
+            <p className="px-4 pt-4 text-[11px] font-black uppercase tracking-[0.16em] text-[#f3c437]">
+              Wallet
+            </p>
+            <p className="px-4 pb-4 pt-1 text-lg font-black">{state.wallet.length} rewards</p>
+          </div>
+        </div>
       </section>
 
-      {notificationsOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/35 px-5 pb-6">
-          <section className="w-full max-w-md rounded-[1.5rem] bg-white p-5 shadow-soft animate-fadeUp">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#8a6500]">Mock notifications</p>
-                <h2 className="mt-1 text-xl font-black">What is new</h2>
-              </div>
-              <button
-                className="rounded-full border border-[#ead47a] px-3 py-2 text-xs font-black"
-                onClick={() => setNotificationsOpen(false)}
-              >
-                Close
-              </button>
+      <section className="space-y-3">
+        <V2SectionTitle title="Promotions" />
+        {banners.map((banner) => (
+          <article key={banner.title} className="overflow-hidden rounded-[1.35rem] border border-[#f3c437]/20 bg-[#1a1710] shadow-sm">
+            <img src={banner.image} alt={banner.title} className="h-36 w-full object-cover" />
+            <div className="p-4">
+              <h2 className="text-base font-black text-white">{banner.title}</h2>
+              <p className="mt-1 text-sm font-semibold leading-6 text-[#f8f5ec]/55">{banner.detail}</p>
             </div>
-            <div className="mt-4 divide-y divide-[#f0df91]">
-              {notifications.map((notification) => (
-                <button
-                  key={notification.title}
-                  className="flex w-full items-start gap-3 py-4 text-left"
-                  onClick={() => {
-                    setActiveView(notification.action);
-                    setNotificationsOpen(false);
-                  }}
-                >
-                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[#f3c437]" />
-                  <span className="flex-1">
-                    <span className="block text-sm font-black">{notification.title}</span>
-                    <span className="mt-1 block text-xs font-semibold leading-5 text-[#7b6b32]">
-                      {notification.detail}
-                    </span>
-                  </span>
-                  <span className="text-xs font-black text-[#8a6500]">{notification.time}</span>
-                </button>
-              ))}
-            </div>
-          </section>
-        </div>
-      )}
+          </article>
+        ))}
+      </section>
+    </div>
+  );
+}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-40 mx-auto max-w-md border-t border-[#ead47a] bg-white px-4 pb-5 pt-3 shadow-[0_-12px_28px_rgba(34,27,5,0.08)]">
-        <div className="grid grid-cols-5 gap-1">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeView === tab.label;
-            return (
-              <button
-                key={tab.label}
-                className={`flex flex-col items-center gap-1 rounded-2xl py-2 text-[11px] font-bold ${
-                  isActive ? "bg-[#fff0a7] text-[#8a6500]" : "text-[#7b6b32]"
-                }`}
-                onClick={() => setActiveView(tab.label)}
-              >
-                <Icon size={19} strokeWidth={isActive ? 2.6 : 2.1} />
-                {tab.label}
-              </button>
-            );
-          })}
+function V2TransactionsTab({ transactions }) {
+  return (
+    <div className="space-y-3 animate-fadeUp">
+      {transactions.slice(0, 10).map((transaction) => (
+        <V2ListRow
+          key={transaction.id}
+          title={transaction.description}
+          meta={formatDate(transaction.date)}
+          value={`${transaction.points > 0 ? "+" : "-"}${formatPoints(Math.abs(transaction.points))}`}
+          tone={transaction.points > 0 ? "positive" : "muted"}
+        />
+      ))}
+    </div>
+  );
+}
+
+function V2QrTab({ user }) {
+  const memberCode = `SS-V2-${user.name.replace(/\s/g, "").toUpperCase()}-2045`;
+
+  return (
+    <div className="space-y-5 animate-fadeUp">
+      <section className="rounded-[1.75rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 text-center shadow-soft">
+        <div className="mx-auto w-fit">
+          <QrPlaceholder value={memberCode} size={184} />
         </div>
-      </nav>
-    </main>
+        <h2 className="mt-5 text-xl font-black text-white">{user.name}</h2>
+        <p className="mt-1 text-sm font-semibold text-[#f8f5ec]/55">{user.tier} member</p>
+        <div className="mt-4 rounded-2xl border border-[#f3c437]/20 bg-[#11100b] px-4 py-3 text-sm font-black text-[#f3c437]">
+          {memberCode}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function V2LedgerTab({ state }) {
+  const runningRows = state.transactions.map((transaction, index) => {
+    const laterActivity = state.transactions
+      .slice(0, index)
+      .reduce((total, item) => total + item.points, 0);
+    return {
+      ...transaction,
+      balance: state.points - laterActivity
+    };
+  });
+
+  return (
+    <div className="space-y-5 animate-fadeUp">
+      <section className="rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 shadow-sm">
+        <V2SectionTitle title="Account points ledger" />
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <V2Stat label="Available" value={formatPoints(state.points)} />
+          <V2Stat label="Lifetime" value={formatPoints(state.user.lifetimePoints)} />
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        {runningRows.map((row) => (
+          <V2ListRow
+            key={row.id}
+            title={row.description}
+            meta={`${formatDate(row.date)} - Balance ${formatPoints(row.balance)}`}
+            value={`${row.points > 0 ? "+" : "-"}${formatPoints(Math.abs(row.points))}`}
+            tone={row.points > 0 ? "positive" : "muted"}
+          />
+        ))}
+      </section>
+    </div>
+  );
+}
+
+function V2AccountTab({ state }) {
+  const settings = ["Push notifications", "Email receipts", "Location-based offers"];
+
+  return (
+    <div className="space-y-5 animate-fadeUp">
+      <section className="rounded-[1.75rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 text-center shadow-sm">
+        <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-[#f3c437] text-[#11100b]">
+          <User size={30} strokeWidth={2.2} />
+        </div>
+        <h2 className="mt-4 text-xl font-black text-white">{state.user.name}</h2>
+        <p className="mt-1 text-sm font-semibold text-[#f8f5ec]/55">{state.user.email}</p>
+      </section>
+
+      <section className="rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 shadow-sm">
+        <V2SectionTitle title="Profile information" />
+        <div className="mt-3 divide-y divide-[#f3c437]/15">
+          <V2ProfileLine label="Tier" value={state.user.tier} />
+          <V2ProfileLine label="Member since" value={formatDate(state.user.memberSince)} />
+          <V2ProfileLine label="Region" value={state.user.region} />
+          <V2ProfileLine label="City" value={state.user.city} />
+          <V2ProfileLine label="Birthdate" value={formatDate(state.user.birthday)} />
+        </div>
+      </section>
+
+      <section className="rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 shadow-sm">
+        <V2SectionTitle title="Settings" />
+        <div className="mt-3 space-y-3">
+          {settings.map((setting) => (
+            <label key={setting} className="flex items-center justify-between gap-3 text-sm font-black text-[#f8f5ec]">
+              <span>{setting}</span>
+              <input className="h-5 w-5 accent-[#f3c437]" type="checkbox" defaultChecked />
+            </label>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function V2SectionTitle({ title }) {
+  return <h2 className="text-lg font-black text-white">{title}</h2>;
+}
+
+function V2Stat({ label, value }) {
+  return (
+    <div className="rounded-2xl border border-[#f3c437]/20 bg-[#11100b] p-4">
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-[#f3c437]">{label}</p>
+      <p className="mt-2 text-xl font-black text-white">{value}</p>
+    </div>
+  );
+}
+
+function V2ListRow({ title, meta, value, tone }) {
+  return (
+    <article className="flex items-center justify-between gap-3 rounded-[1.25rem] border border-[#f3c437]/15 bg-[#1a1710] px-4 py-4 shadow-sm">
+      <div>
+        <p className="text-sm font-black text-white">{title}</p>
+        <p className="mt-1 text-xs font-semibold leading-5 text-[#f8f5ec]/45">{meta}</p>
+      </div>
+      <span className={`text-sm font-black ${tone === "positive" ? "text-[#60d394]" : "text-[#f8f5ec]/50"}`}>
+        {value}
+      </span>
+    </article>
+  );
+}
+
+function V2ProfileLine({ label, value }) {
+  return (
+    <div className="flex items-center justify-between gap-3 py-3 text-sm">
+      <span className="font-bold text-[#f8f5ec]/50">{label}</span>
+      <span className="font-black text-white">{value}</span>
+    </div>
   );
 }
 
