@@ -26,7 +26,7 @@ const initialState = {
   user: {
     name: "Gerry Sy",
     memberSince: "2022-07-15",
-    tier: "Platinum",
+    tier: "Gold",
     lifetimePoints: 98540,
     email: "gerry.sy@supersam.club",
     region: "Metro Manila",
@@ -159,12 +159,6 @@ const memberTiers = [
     accent: "#f3c437"
   },
   {
-    name: "Platinum",
-    minimumPoints: 50000,
-    pesoPerPoint: 70,
-    accent: "#d9e2ef"
-  },
-  {
     name: "Diamond",
     minimumPoints: 100000,
     pesoPerPoint: 50,
@@ -204,13 +198,6 @@ function reducer(state, action) {
 
 function formatPoints(value) {
   return new Intl.NumberFormat("en-US").format(value);
-}
-
-function formatCompactNumber(value) {
-  return new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 1,
-    notation: "compact"
-  }).format(value);
 }
 
 function formatDate(value) {
@@ -915,7 +902,7 @@ function NewDesignSite({ state }) {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState("Home");
-  const [isLightMode, setIsLightMode] = useState(false);
+  const [isLightMode, setIsLightMode] = useState(true);
   const [message, setMessage] = useState("");
 
   const tabs = [
@@ -949,11 +936,7 @@ function NewDesignSite({ state }) {
 
         <section className="px-5 pt-5">
           {activeTab === "Home" && (
-            <V2HomeTab
-              state={state}
-              onOpenLedger={() => setActiveTab("Ledger")}
-              onOpenQr={() => setActiveTab("QR")}
-            />
+            <V2HomeTab state={state} />
           )}
           {activeTab === "Transactions" && <V2TransactionsTab transactions={state.transactions} />}
           {activeTab === "QR" && <V2QrTab user={state.user} />}
@@ -992,11 +975,11 @@ function NewDesignSite({ state }) {
   }
 
   return (
-    <main className="new-design -mx-5 min-h-screen bg-[#11100b] px-5 py-6 text-[#f8f5ec]">
+    <main className="new-design -mx-5 min-h-screen bg-[#fffeec] px-5 py-6 text-[#11100b]">
       <header className="flex items-center justify-between">
         <SupersamV2Mark />
         <button
-          className="rounded-full border border-[#f3c437]/35 px-4 py-2 text-xs font-black text-[#f3c437]"
+          className="rounded-full border border-[#1d3f1f]/20 bg-white px-4 py-2 text-xs font-black text-[#1d3f1f] shadow-sm"
           onClick={() => navigate("/login")}
         >
           Classic
@@ -1004,34 +987,36 @@ function NewDesignSite({ state }) {
       </header>
 
       <section className="mt-10">
-        <div className="overflow-hidden rounded-[1.75rem] border border-[#f3c437]/25 bg-[#1a1710] shadow-soft">
-          <div className="border-b border-[#f3c437]/20 bg-[#f3c437] p-5 text-[#11100b]">
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-black/55">
-              Supersam member pass
-            </p>
-            <h2 className="mt-3 text-3xl font-black leading-tight">Enter the V2 mock app.</h2>
-            <p className="mt-2 text-sm font-bold leading-6 text-black/65">
-              Auth is mocked for preview. Tap login to go straight into the app.
-            </p>
+        <div className="overflow-hidden rounded-[1.75rem] border border-[#e6d576] bg-white shadow-[0_22px_48px_rgba(31,79,32,0.14)]">
+          <div className="border-b border-[#e6d576] bg-[#f3c437] p-5 text-[#11100b]">
+            <div className="max-w-[14rem]">
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-black/55">
+                Supersam member pass
+              </p>
+              <h2 className="mt-3 text-3xl font-black leading-tight">Enter the V2 mock app.</h2>
+              <p className="mt-2 text-sm font-bold leading-6 text-black/65">
+                Auth is mocked for preview. Tap login to go straight into the app.
+              </p>
+            </div>
           </div>
 
           {message && (
-            <div className="mx-5 mt-5 rounded-2xl border border-[#f3c437]/35 bg-[#242015] px-4 py-3 text-sm font-semibold text-[#f3c437]">
+            <div className="mx-5 mt-5 rounded-2xl border border-[#d9bd2f] bg-[#fff7c7] px-4 py-3 text-sm font-semibold text-[#5a4a00]">
               {message}
             </div>
           )}
 
           <form className="space-y-4 p-5" onSubmit={handleSubmit} noValidate>
-            <div className="rounded-[1.25rem] border border-[#f3c437]/20 bg-[#11100b] p-4">
+            <div className="rounded-[1.25rem] border border-[#d8e1b3] bg-[#f7faed] p-4">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f3c437]">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[#1d6b2d]">
                     Mock profile
                   </p>
-                  <p className="mt-2 text-lg font-black text-white">{state.user.name}</p>
-                  <p className="mt-1 text-sm font-semibold text-[#f8f5ec]/55">{state.user.email}</p>
+                  <p className="mt-2 text-lg font-black text-[#11100b]">{state.user.name}</p>
+                  <p className="mt-1 text-sm font-semibold text-[#40533f]">{state.user.email}</p>
                 </div>
-                <div className="grid h-14 w-14 place-items-center rounded-full bg-[#f3c437] text-[#11100b]">
+                <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-[#f3c437] text-[#11100b]">
                   <Crown size={24} strokeWidth={2.25} />
                 </div>
               </div>
@@ -1046,13 +1031,13 @@ function NewDesignSite({ state }) {
 
           <div className="flex border-t border-[#f3c437]/20 text-center text-sm font-black">
             <button
-              className="flex-1 px-3 py-4 text-[#f8f5ec]/65"
+              className="flex-1 px-3 py-4 text-[#31572c]"
               onClick={() => setMessage("Sign up is mocked in this V2 preview.")}
             >
               Sign up
             </button>
             <button
-              className="flex-1 border-l border-[#f3c437]/20 px-3 py-4 text-[#f8f5ec]/65"
+              className="flex-1 border-l border-[#f3c437]/20 px-3 py-4 text-[#31572c]"
               onClick={() => setMessage("Password reset is mocked in this V2 preview.")}
             >
               Forgot password
@@ -1064,165 +1049,118 @@ function NewDesignSite({ state }) {
   );
 }
 
-function V2HomeTab({ state, onOpenLedger, onOpenQr }) {
+function V2HomeTab({ state }) {
   const tierStatus = useMemo(() => getTierStatus(state), [state]);
-  const latestEarned = state.transactions.find((transaction) => transaction.points > 0);
-  const banners = [
+  const events = [
     {
-      title: "Double points lunch",
-      detail: "Earn 2x points at Supersam Bonifacio from 11 AM to 2 PM.",
+      title: "Birthday credit points",
+      detail: "Enjoy free credit points during your birthday month when you dine in any Supersam branch.",
+      date: "Birthday month",
+      icon: <Gift size={18} strokeWidth={2.4} />,
       image:
-        "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=900&q=80"
+        "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80"
     },
     {
-      title: "Chef's weekend table",
-      detail: "Use points as bill discounts at participating branches.",
+      title: "Weekend dining bonus",
+      detail: "Earn extra credit points on chef specials every Friday to Sunday.",
+      date: "Fri - Sun",
+      icon: <Sparkles size={18} strokeWidth={2.4} />,
       image:
         "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80"
     }
   ];
+  const dishGallery = [
+    {
+      title: "Beef Salpicao",
+      image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "Truffle Pizza",
+      image: "https://images.unsplash.com/photo-1601924582970-9238bcb495d9?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "Grilled Prawns",
+      image: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "Roast Chicken",
+      image: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "Seafood Pasta",
+      image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      title: "Chocolate Cake",
+      image: "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=600&q=80"
+    }
+  ];
 
   return (
-    <div className="space-y-4 animate-fadeUp">
-      <section className="overflow-hidden rounded-[1.5rem] border border-[#f3c437]/20 bg-[#f3c437] text-[#11100b] shadow-soft">
+    <div className="space-y-5 animate-fadeUp">
+      <section className="overflow-hidden rounded-[1.5rem] border border-[#f3c437]/25 bg-[#f3c437] text-[#11100b] shadow-[0_20px_46px_rgba(243,196,55,0.2)]">
         <div className="p-5">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-black/55">
-            Available points
-          </p>
-          <div className="mt-3 flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-black/55">
+                Credit points
+              </p>
+              <h2 className="mt-2 text-xl font-black leading-tight">{state.user.name}</h2>
+              <p className="mt-1 text-sm font-bold text-black/60">{tierStatus.activeTier.name} member</p>
+            </div>
+            <span className="shrink-0 rounded-full border border-black/15 bg-white/45 px-3 py-1 text-xs font-black text-[#11100b]">
+              {tierStatus.activeTier.name}
+            </span>
+          </div>
+          <div className="mt-5 flex items-end justify-between gap-3">
             <div>
               <p className="text-5xl font-black leading-none">{formatPoints(state.points)}</p>
-              <p className="mt-2 text-sm font-bold text-black/60">
-                {tierStatus.activeTier.name} member - P{tierStatus.activeTier.pesoPerPoint} = 1 pt
+              <p className="mt-2 text-xs font-black uppercase tracking-[0.16em] text-black/45">
+                Available balance
               </p>
             </div>
-            <Wallet size={30} strokeWidth={2.3} />
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#11100b] text-[#f3c437]">
+              <Wallet size={24} strokeWidth={2.3} />
+            </div>
           </div>
-
-          <div className="mt-5 grid grid-cols-2 gap-3">
-            <button
-              className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#11100b] px-3 py-3 text-sm font-black text-[#f3c437] transition active:scale-95"
-              onClick={onOpenQr}
-            >
-              <QrCode size={17} strokeWidth={2.4} />
-              Show QR
-            </button>
-            <button
-              className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-black/20 bg-white/45 px-3 py-3 text-sm font-black text-[#11100b] transition active:scale-95"
-              onClick={onOpenLedger}
-            >
-              <Ticket size={17} strokeWidth={2.4} />
-              Ledger
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 border-t border-black/15 bg-[#11100b] text-[#f8f5ec]">
-          <V2HomeMetric label="Lifetime" value={formatPoints(state.user.lifetimePoints)} />
-          <V2HomeMetric
-            label="Last Earned"
-            value={latestEarned ? `+${formatPoints(latestEarned.points)}` : "None"}
-          />
-        </div>
-      </section>
-
-      <section className="grid grid-cols-2 gap-3">
-        <div className="rounded-[1.25rem] border border-[#f3c437]/15 bg-[#1a1710] p-4 shadow-sm">
-          <p className="text-[11px] font-black uppercase tracking-[0.15em] text-[#f3c437]">Next Tier</p>
-          <p className="mt-2 text-lg font-black text-white">
-            {tierStatus.nextTier ? tierStatus.nextTier.name : "Unlocked"}
-          </p>
-          <p className="mt-1 text-xs font-semibold leading-5 text-[#f8f5ec]/45">
-            {tierStatus.nextTier
-              ? `${formatPoints(tierStatus.pointsToNextTier)} pts left`
-              : "Highest member tier"}
-          </p>
-        </div>
-        <div className="rounded-[1.25rem] border border-[#f3c437]/15 bg-[#1a1710] p-4 shadow-sm">
-          <p className="text-[11px] font-black uppercase tracking-[0.15em] text-[#f3c437]">Spend To Go</p>
-          <p className="mt-2 text-lg font-black text-white">
-            {tierStatus.nextTier
-              ? `P${formatCompactNumber(tierStatus.pointsToNextTier * tierStatus.activeTier.pesoPerPoint)}`
-              : "Top tier"}
-          </p>
-          <p className="mt-1 text-xs font-semibold leading-5 text-[#f8f5ec]/45">
-            At P{tierStatus.activeTier.pesoPerPoint} = 1 pt
-          </p>
         </div>
       </section>
 
       <TierStatusGauge status={tierStatus} />
 
-      <section className="rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 shadow-sm">
-        <div className="flex items-center justify-between gap-4">
-          <V2SectionTitle title="Tier path" />
-          <span className="rounded-full border border-[#f3c437]/25 px-3 py-1 text-xs font-black text-[#f3c437]">
-            {tierStatus.activeTier.name}
-          </span>
-        </div>
-
-        <div className="mt-5 grid grid-cols-4 gap-2">
-          {memberTiers.map((tier, index) => {
-            const isActive = tier.name === tierStatus.activeTier.name;
-            const isUnlocked = index <= tierStatus.activeTierIndex;
-            return (
-              <div
-                key={tier.name}
-                className={`rounded-2xl border px-2 py-3 text-center ${
-                  isActive
-                    ? "border-[#f3c437] bg-[#f3c437] text-[#11100b]"
-                    : "border-[#f3c437]/15 bg-[#11100b] text-[#f8f5ec]"
-                }`}
-              >
-                <span
-                  className="mx-auto block h-2 w-2 rounded-full"
-                  style={{ backgroundColor: isUnlocked ? tier.accent : "#5b5039" }}
-                />
-                <p className="mt-2 text-[11px] font-black">{tier.name}</p>
-                <p className={`mt-1 text-[10px] font-bold ${isActive ? "text-black/55" : "text-[#f8f5ec]/40"}`}>
-                  {formatPoints(tier.minimumPoints)}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="mt-5 divide-y divide-[#f3c437]/15">
-          {memberTiers.map((tier) => {
-            const isActive = tier.name === tierStatus.activeTier.name;
-            return (
-              <div key={tier.name} className="grid grid-cols-[1fr_auto] items-center gap-3 py-3 first:pt-0 last:pb-0">
-                <div className="min-w-0">
-                  <p className="text-sm font-black text-white">{tier.name}</p>
-                  <p className="mt-0.5 text-xs font-semibold text-[#f8f5ec]/45">
-                    {formatPoints(tier.minimumPoints)} lifetime points
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-black text-[#f3c437]">P{tier.pesoPerPoint}:1</p>
-                  <p className="mt-0.5 text-[11px] font-bold text-[#f8f5ec]/40">
-                    {isActive ? "Current rate" : "earn rate"}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
       <section className="space-y-3">
         <div className="flex items-center justify-between gap-3">
-          <V2SectionTitle title="Promotions" />
-          <ChevronRight className="text-[#f3c437]" size={19} strokeWidth={2.4} />
+          <V2SectionTitle title="Events" />
+          <span className="rounded-full border border-[#f3c437]/20 px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-[#f3c437]">
+            Member perks
+          </span>
         </div>
         <div className="space-y-3">
-          {banners.map((banner) => (
-            <article key={banner.title} className="grid grid-cols-[6.5rem_1fr] overflow-hidden rounded-[1.25rem] border border-[#f3c437]/20 bg-[#1a1710] shadow-sm">
-              <img src={banner.image} alt={banner.title} className="h-full min-h-[7rem] w-full object-cover" />
+          {events.map((event) => (
+            <article key={event.title} className="grid grid-cols-[6.5rem_1fr] overflow-hidden rounded-[1.25rem] border border-[#f3c437]/20 bg-[#1a1710] shadow-sm">
+              <img src={event.image} alt={event.title} className="h-full min-h-[7rem] w-full object-cover" />
               <div className="p-4">
-                <h2 className="text-sm font-black text-white">{banner.title}</h2>
-                <p className="mt-1 text-xs font-semibold leading-5 text-[#f8f5ec]/55">{banner.detail}</p>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.14em] text-[#f3c437]">
+                    {event.icon}
+                    {event.date}
+                  </span>
+                  <ChevronRight className="text-[#f3c437]" size={17} strokeWidth={2.4} />
+                </div>
+                <h2 className="mt-2 text-sm font-black text-white">{event.title}</h2>
+                <p className="mt-1 text-xs font-semibold leading-5 text-[#f8f5ec]/55">{event.detail}</p>
               </div>
+            </article>
+          ))}
+        </div>
+        <div className="flex items-center justify-between gap-3 pt-1">
+          <V2SectionTitle title="Popular" />
+        </div>
+        <div className="-mx-5 flex snap-x gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {dishGallery.map((dish) => (
+            <article key={dish.title} className="w-[9.5rem] shrink-0 snap-start overflow-hidden rounded-[1rem] border border-[#f3c437]/15 bg-[#1a1710] shadow-sm">
+              <img src={dish.image} alt={dish.title} className="aspect-[4/3] w-full object-cover" />
+              <p className="px-3 py-2 text-[12px] font-black leading-4 text-white">{dish.title}</p>
             </article>
           ))}
         </div>
@@ -1231,130 +1169,123 @@ function V2HomeTab({ state, onOpenLedger, onOpenQr }) {
   );
 }
 
-function V2HomeMetric({ label, value }) {
+function V2TierPathSection({ tierStatus }) {
   return (
-    <div className="border-r border-[#f3c437]/15 px-3 py-4 last:border-r-0">
-      <p className="text-[10px] font-black uppercase tracking-[0.13em] text-[#f3c437]">{label}</p>
-      <p className="mt-1 truncate text-sm font-black text-white">{value}</p>
-    </div>
+    <section className="rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 shadow-sm">
+      <div className="flex items-center justify-between gap-4">
+        <V2SectionTitle title="Tier path" />
+        <span className="rounded-full border border-[#f3c437]/25 px-3 py-1 text-xs font-black text-[#f3c437]">
+          {tierStatus.activeTier.name}
+        </span>
+      </div>
+
+      <div className="mt-5 grid grid-cols-3 gap-2">
+        {memberTiers.map((tier, index) => {
+          const isActive = tier.name === tierStatus.activeTier.name;
+          const isUnlocked = index <= tierStatus.activeTierIndex;
+          return (
+            <div
+              key={tier.name}
+              className={`rounded-2xl border px-2 py-3 text-center ${
+                isActive
+                  ? "border-[#f3c437] bg-[#f3c437] text-[#11100b]"
+                  : "border-[#f3c437]/15 bg-[#11100b] text-[#f8f5ec]"
+              }`}
+            >
+              <span
+                className="mx-auto block h-2 w-2 rounded-full"
+                style={{ backgroundColor: isUnlocked ? tier.accent : "#5b5039" }}
+              />
+              <p className="mt-2 text-[11px] font-black">{tier.name}</p>
+              <p className={`mt-1 text-[10px] font-bold ${isActive ? "text-black/55" : "text-[#f8f5ec]/40"}`}>
+                {formatPoints(tier.minimumPoints)}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 divide-y divide-[#f3c437]/15">
+        {memberTiers.map((tier) => {
+          const isActive = tier.name === tierStatus.activeTier.name;
+          return (
+            <div key={tier.name} className="grid grid-cols-[1fr_auto] items-center gap-3 py-3 first:pt-0 last:pb-0">
+              <div className="min-w-0">
+                <p className="text-sm font-black text-white">{tier.name}</p>
+                <p className="mt-0.5 text-xs font-semibold text-[#f8f5ec]/45">
+                  {formatPoints(tier.minimumPoints)} lifetime points
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-black text-[#f3c437]">P{tier.pesoPerPoint}:1</p>
+                <p className="mt-0.5 text-[11px] font-bold text-[#f8f5ec]/40">
+                  {isActive ? "Current rate" : "earn rate"}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
 function TierStatusGauge({ status }) {
-  const [detailsOpen, setDetailsOpen] = useState(false);
-  const displayProgress = 0.67;
-  const strokeOffset = 100 - displayProgress * 100;
-  const markerAngle = Math.PI - Math.PI * displayProgress;
-  const markerX = 128 + Math.cos(markerAngle) * 104;
-  const markerY = 124 - Math.sin(markerAngle) * 104;
-  const activeRate = `P${status.activeTier.pesoPerPoint} spend = 1 point`;
-  const reviewMessage = status.demotionSteps > 0
-    ? `Demoted ${status.demotionSteps} tier${status.demotionSteps === 1 ? "" : "s"} after ${status.inactiveDays} inactive days.`
-    : `${status.demotionDueIn} day${status.demotionDueIn === 1 ? "" : "s"} until demotion review.`;
+  const progressPercent = Math.round(status.progress * 100);
+  const tierEnd = status.nextTier?.minimumPoints ?? status.activeTier.minimumPoints;
+  const tierRange = Math.max(1, tierEnd - status.activeTier.minimumPoints);
+  const pointsInActiveTier = status.nextTier
+    ? Math.max(0, tierRange - status.pointsToNextTier)
+    : tierRange;
   const nextGoal = status.nextTier
     ? `${formatPoints(status.pointsToNextTier)} pts to ${status.nextTier.name}`
     : "Top tier unlocked";
 
   return (
-    <section className="overflow-hidden rounded-[1.5rem] border border-[#f3c437]/25 bg-[#1a1710] shadow-[0_18px_42px_rgba(243,196,55,0.08)]">
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f3c437]">
-              Membership tier
-            </p>
-            <h2 className="mt-2 text-2xl font-black text-white">{status.activeTier.name}</h2>
-            <p className="mt-1 text-sm font-semibold text-[#f8f5ec]/50">{activeRate}</p>
-          </div>
-          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#f3c437] text-[#11100b] shadow-[0_0_24px_rgba(243,196,55,0.35)]">
-            <Crown size={22} strokeWidth={2.4} />
-          </div>
+    <section className="rounded-[1.5rem] border border-[#f3c437]/25 bg-[#1a1710] p-5 shadow-[0_18px_42px_rgba(243,196,55,0.08)]">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <V2SectionTitle title="Tier progress" />
+          <p className="mt-1 text-sm font-bold text-[#f8f5ec]/50">
+            {status.nextTier ? `${status.activeTier.name} to ${status.nextTier.name}` : "Highest tier"}
+          </p>
         </div>
-
-        <div className="relative mx-auto mt-5 h-40 max-w-[18rem]">
-          <svg viewBox="0 0 256 144" className="h-full w-full">
-            <defs>
-              <linearGradient id="tierProgressGradient" x1="24" x2="232" y1="124" y2="124" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#f3c437" />
-                <stop offset="58%" stopColor="#ff7a59" />
-                <stop offset="100%" stopColor="#7de3ff" />
-              </linearGradient>
-              <filter id="tierProgressGlow" x="-20%" y="-50%" width="140%" height="180%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feColorMatrix
-                  in="blur"
-                  type="matrix"
-                  values="1 0 0 0 0.95 0 1 0 0 0.77 0 0 1 0 0.22 0 0 0 0.75 0"
-                />
-                <feMerge>
-                  <feMergeNode />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-            <path
-              d="M24 124A104 104 0 0 1 232 124"
-              fill="none"
-              pathLength="100"
-              stroke="rgba(248,245,236,0.1)"
-              strokeLinecap="round"
-              strokeWidth="24"
-            />
-            <path
-              d="M24 124A104 104 0 0 1 232 124"
-              fill="none"
-              pathLength="100"
-              stroke="rgba(243,196,55,0.18)"
-              strokeLinecap="round"
-              strokeWidth="16"
-            />
-            <path
-              d="M24 124A104 104 0 0 1 232 124"
-              fill="none"
-              filter="url(#tierProgressGlow)"
-              pathLength="100"
-              stroke="url(#tierProgressGradient)"
-              strokeDasharray="100"
-              strokeDashoffset={strokeOffset}
-              strokeLinecap="round"
-              strokeWidth="22"
-            />
-            {memberTiers.map((tier, index) => {
-              const angle = Math.PI - (Math.PI * index) / (memberTiers.length - 1);
-              const x = 128 + Math.cos(angle) * 104;
-              const y = 124 - Math.sin(angle) * 104;
-              const isUnlocked = index <= status.activeTierIndex;
-              return (
-                <circle
-                  key={tier.name}
-                  cx={x}
-                  cy={y}
-                  fill={isUnlocked ? tier.accent : "#302a1a"}
-                  r={isUnlocked ? 7 : 4.5}
-                  stroke="#11100b"
-                  strokeWidth="3"
-                />
-              );
-            })}
-            <circle cx={markerX} cy={markerY} r="11" fill="#11100b" stroke="#f3c437" strokeWidth="4" />
-            <circle cx={markerX} cy={markerY} r="4" fill="#7de3ff" />
-          </svg>
-
-          <div className="absolute inset-x-0 bottom-1 text-center">
-            <p className="mx-auto w-fit rounded-full border border-[#f3c437]/25 bg-[#11100b]/80 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-[#7de3ff]">
-              On track
-            </p>
-            <p className="mt-2 text-5xl font-black leading-none text-white">
-              {Math.round(displayProgress * 100)}%
-            </p>
-            <p className="mt-1 text-xs font-black uppercase tracking-[0.16em] text-[#f3c437]">
-              {nextGoal}
-            </p>
-          </div>
-        </div>
+        <p className="text-4xl font-black leading-none text-white">{progressPercent}%</p>
       </div>
 
-      <div className="border-t border-[#f3c437]/15 bg-[#11100b]">
+      <div className="mt-5 h-7 overflow-hidden rounded-full border border-[#f3c437]/20 bg-[#fff7c7] p-1">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-[#fff3a6] via-[#f3c437] to-[#b87700] shadow-[0_0_22px_rgba(243,196,55,0.35)] transition-all"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
+
+      <div className="mt-3 flex items-center justify-between gap-3 text-xs font-black text-[#f8f5ec]/45">
+        <span>{formatPoints(status.activeTier.minimumPoints)}</span>
+        <span className="text-center text-[#f3c437]">
+          {formatPoints(pointsInActiveTier)} / {formatPoints(tierRange)} pts
+        </span>
+        <span>{status.nextTier ? formatPoints(status.nextTier.minimumPoints) : "Max"}</span>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-[#f3c437]/15 bg-[#11100b] px-4 py-3">
+        <p className="text-xs font-black uppercase tracking-[0.16em] text-[#b87700]">
+          {nextGoal}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function V2ActivityDemotionSection({ status }) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const reviewMessage = status.demotionSteps > 0
+    ? `Demoted ${status.demotionSteps} tier${status.demotionSteps === 1 ? "" : "s"} after ${status.inactiveDays} inactive days.`
+    : `${status.demotionDueIn} day${status.demotionDueIn === 1 ? "" : "s"} until demotion review.`;
+
+  return (
+    <section className="overflow-hidden rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] shadow-sm">
+      <div className="bg-[#11100b]">
         <button
           className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left"
           type="button"
@@ -1554,6 +1485,7 @@ function V2LedgerTab({ state }) {
 }
 
 function V2AccountTab({ state, isLightMode, onLightModeChange }) {
+  const tierStatus = useMemo(() => getTierStatus(state), [state]);
   const settings = ["Push notifications", "Email receipts", "Location-based offers"];
 
   return (
@@ -1577,16 +1509,19 @@ function V2AccountTab({ state, isLightMode, onLightModeChange }) {
         </div>
       </section>
 
+      <V2TierPathSection tierStatus={tierStatus} />
+      <V2ActivityDemotionSection status={tierStatus} />
+
       <section className="rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 shadow-sm">
         <V2SectionTitle title="Settings" />
         <div className="mt-3 space-y-3">
           <label className="flex items-center justify-between gap-3 text-sm font-black text-[#f8f5ec]">
-            <span>Light mode</span>
+            <span>Dark mode</span>
             <input
-              checked={isLightMode}
+              checked={!isLightMode}
               className="h-5 w-5 accent-[#f3c437]"
               type="checkbox"
-              onChange={(event) => onLightModeChange(event.target.checked)}
+              onChange={(event) => onLightModeChange(!event.target.checked)}
             />
           </label>
           {settings.map((setting) => (
@@ -2357,11 +2292,6 @@ function TierModal({ onClose }) {
       name: "Gold",
       requirement: "0 - 24,999 pts",
       benefits: ["Priority booking", "Birthday surprise", "Member pricing"]
-    },
-    {
-      name: "Platinum",
-      requirement: "25,000 - 74,999 pts",
-      benefits: ["Chef table access", "Exclusive tastings", "Bonus points days"]
     },
     {
       name: "Signature",
