@@ -129,6 +129,46 @@ body {
   color: rgba(255, 255, 255, 0.7) !important;
 }
 
+.app-shell .new-design.v2-light {
+  background: #fffeec !important;
+  color: #010812 !important;
+}
+
+.app-shell .new-design.v2-light [class*="bg-[#11100b]"],
+.app-shell .new-design.v2-light [class*="bg-[#1a1710]"],
+.app-shell .new-design.v2-light [class*="bg-[#18150d]"],
+.app-shell .new-design.v2-light [class*="bg-[#242015]"] {
+  background-color: #ffffff !important;
+}
+
+.app-shell .new-design.v2-light [class*="bg-[#11100b]/95"] {
+  background-color: rgba(255, 254, 236, 0.95) !important;
+}
+
+.app-shell .new-design.v2-light [class*="text-[#f8f5ec]"],
+.app-shell .new-design.v2-light [class*="text-white"] {
+  color: #010812 !important;
+}
+
+.app-shell .new-design.v2-light [class*="text-[#f8f5ec]/"],
+.app-shell .new-design.v2-light [class*="text-white/"] {
+  color: rgba(1, 8, 18, 0.58) !important;
+}
+
+.app-shell .new-design.v2-light [class*="border-[#f3c437]/"],
+.app-shell .new-design.v2-light [class*="border-black/"] {
+  border-color: rgba(1, 8, 18, 0.12) !important;
+}
+
+.app-shell .new-design.v2-light nav {
+  background-color: #ffffff !important;
+  box-shadow: 0 -12px 28px rgba(1, 8, 18, 0.12) !important;
+}
+
+.app-shell .new-design.v2-light nav button:not(.bg-\[\#f3c437\]) {
+  color: rgba(1, 8, 18, 0.5) !important;
+}
+
 .glass-card {
   background: #ffffff;
   border: 1px solid rgba(1, 8, 18, 0.08);

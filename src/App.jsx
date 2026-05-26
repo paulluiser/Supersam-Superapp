@@ -19,6 +19,7 @@ import {
   ScanLine,
   Bell,
   Star,
+  Download,
 } from "lucide-react";
 
 const initialState = {
@@ -56,7 +57,7 @@ const initialState = {
     {
       id: "tx-4",
       date: "2026-03-28",
-      description: "Redeemed - Signature Tasting Menu",
+      description: "Points Discount - Supersam Bonifacio",
       points: -4200
     },
     {
@@ -74,7 +75,7 @@ const initialState = {
     {
       id: "tx-7",
       date: "2026-03-02",
-      description: "Redeemed - Chef's Table Voucher",
+      description: "Points Discount - Supersam Rockwell",
       points: -2500
     },
     {
@@ -98,7 +99,7 @@ const initialState = {
     {
       id: "tx-11",
       date: "2026-01-20",
-      description: "Redeemed - Valentine's Dessert Set",
+      description: "Points Discount - Supersam Makati",
       points: -1500
     },
     {
@@ -114,127 +115,67 @@ const initialState = {
       points: 1040
     },
   ],
-  wallet: [
-    {
-      id: "wd-1",
-      title: "Signature Tasting Menu",
-      status: "Ready",
-      expires: "2026-06-30",
-      code: "SS-TASTE-2045"
-    },
-    {
-      id: "wd-2",
-      title: "Chef's Table Voucher",
-      status: "Scheduled",
-      expires: "2026-05-20",
-      code: "SS-CHEF-1188"
-    }
-  ]
+  wallet: []
 };
 
-const rewards = [
+const discountOptions = [
   {
-    id: "rw-1",
-    title: "US Angus Beef Salpicao",
-    points: 4200,
-    image:
-      "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80",
-    tag: "Main",
-    category: "Mains"
+    id: "dc-1",
+    title: "P500 bill discount",
+    points: 500,
+    category: "Discount"
   },
   {
-    id: "rw-2",
-    title: "Truffle Mushroom Pizza",
-    points: 7200,
-    image:
-      "https://images.unsplash.com/photo-1601924582970-9238bcb495d9?auto=format&fit=crop&w=800&q=80",
-    tag: "House Favorite",
-    category: "Mains"
+    id: "dc-2",
+    title: "P1,000 bill discount",
+    points: 1000,
+    category: "Discount"
   },
   {
-    id: "rw-3",
-    title: "Mango Pavlova",
-    points: 1800,
-    image:
-      "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80",
-    tag: "Dessert",
-    category: "Dessert"
+    id: "dc-3",
+    title: "P2,500 bill discount",
+    points: 2500,
+    category: "Discount"
   },
   {
-    id: "rw-4",
-    title: "Crispy Pork Sisig",
-    points: 2600,
-    image:
-      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80",
-    tag: "Savory",
-    category: "Mains"
-  },
-  {
-    id: "rw-5",
-    title: "Smoked Salmon Caesar",
-    points: 2200,
-    image:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
-    tag: "Fresh",
-    category: "Starters"
-  },
-  {
-    id: "rw-6",
-    title: "Garlic Butter Prawns",
-    points: 1600,
-    image:
-      "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=800&q=80",
-    tag: "Seafood",
-    category: "Starters"
-  },
-  {
-    id: "rw-7",
-    title: "Calamansi Basil Spritz",
-    points: 2400,
-    image:
-      "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80",
-    tag: "Mocktail",
-    category: "Beverage"
-  },
-  {
-    id: "rw-8",
-    title: "Classic Sans Rival Slice",
-    points: 5200,
-    image:
-      "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=800&q=80",
-    tag: "Sweet",
-    category: "Dessert"
-  },
-  {
-    id: "rw-9",
-    title: "Ube Cheesecake",
-    points: 2800,
-    image:
-      "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=800&q=80",
-    tag: "Limited",
-    category: "Dessert"
-  },
-  {
-    id: "rw-10",
-    title: "Iced Spanish Latte",
-    points: 1200,
-    image:
-      "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=800&q=80",
-    tag: "Coffee",
-    category: "Beverage"
-  },
-  {
-    id: "rw-11",
-    title: "Roasted Chicken Inasal",
-    points: 8800,
-    image:
-      "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=800&q=80",
-    tag: "Grill",
-    category: "Mains"
+    id: "dc-4",
+    title: "P5,000 bill discount",
+    points: 5000,
+    category: "Discount"
   }
 ];
 
-const categories = ["All", "Starters", "Mains", "Dessert", "Beverage"];
+const memberTiers = [
+  {
+    name: "Member",
+    minimumPoints: 0,
+    pesoPerPoint: 100,
+    accent: "#f8f5ec"
+  },
+  {
+    name: "Gold",
+    minimumPoints: 10000,
+    pesoPerPoint: 85,
+    accent: "#f3c437"
+  },
+  {
+    name: "Platinum",
+    minimumPoints: 50000,
+    pesoPerPoint: 70,
+    accent: "#d9e2ef"
+  },
+  {
+    name: "Diamond",
+    minimumPoints: 100000,
+    pesoPerPoint: 50,
+    accent: "#7de3ff"
+  }
+];
+
+const demotionPolicy = {
+  graceDays: 60,
+  stepDays: 30
+};
 
 function reducer(state, action) {
   switch (action.type) {
@@ -242,8 +183,7 @@ function reducer(state, action) {
       return {
         ...state,
         points: state.points - action.payload.points,
-        transactions: [action.payload.transaction, ...state.transactions],
-        wallet: [action.payload.walletItem, ...state.wallet]
+        transactions: [action.payload.transaction, ...state.transactions]
       };
     case "EARN_POINTS":
       return {
@@ -266,6 +206,13 @@ function formatPoints(value) {
   return new Intl.NumberFormat("en-US").format(value);
 }
 
+function formatCompactNumber(value) {
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 1,
+    notation: "compact"
+  }).format(value);
+}
+
 function formatDate(value) {
   const [year, month, day] = value.split("-").map(Number);
   const date = new Date(year, month - 1, day);
@@ -276,11 +223,74 @@ function formatDate(value) {
   }).format(date);
 }
 
+function formatShortDate(value) {
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  }).format(date);
+}
+
+function parseDateKey(value) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
 function toLocalDateKey(date = new Date()) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function daysBetween(startDate, endDate) {
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  return Math.max(0, Math.floor((endDate - startDate) / millisecondsPerDay));
+}
+
+function getEarnedTier(points) {
+  return memberTiers.reduce((earnedTier, tier) => (
+    points >= tier.minimumPoints ? tier : earnedTier
+  ), memberTiers[0]);
+}
+
+function getTierStatus(state) {
+  const today = new Date();
+  const lastEarnedTransaction = state.transactions.find((transaction) => transaction.points > 0);
+  const lastEarnedDate = lastEarnedTransaction
+    ? parseDateKey(lastEarnedTransaction.date)
+    : parseDateKey(state.user.memberSince);
+  const inactiveDays = daysBetween(lastEarnedDate, today);
+  const earnedTier = getEarnedTier(state.user.lifetimePoints);
+  const earnedIndex = memberTiers.findIndex((tier) => tier.name === earnedTier.name);
+  const demotionSteps = inactiveDays <= demotionPolicy.graceDays
+    ? 0
+    : Math.floor((inactiveDays - demotionPolicy.graceDays) / demotionPolicy.stepDays) + 1;
+  const activeTierIndex = Math.max(0, earnedIndex - demotionSteps);
+  const activeTier = memberTiers[activeTierIndex];
+  const nextTier = memberTiers[activeTierIndex + 1] || null;
+  const nextMinimum = nextTier?.minimumPoints ?? activeTier.minimumPoints;
+  const pointsIntoTier = state.user.lifetimePoints - activeTier.minimumPoints;
+  const tierRange = Math.max(1, nextMinimum - activeTier.minimumPoints);
+  const progress = nextTier ? Math.min(1, Math.max(0, pointsIntoTier / tierRange)) : 1;
+  const demotionDueIn = inactiveDays <= demotionPolicy.graceDays
+    ? demotionPolicy.graceDays - inactiveDays
+    : demotionPolicy.stepDays - ((inactiveDays - demotionPolicy.graceDays) % demotionPolicy.stepDays);
+
+  return {
+    activeTier,
+    activeTierIndex,
+    demotionDueIn,
+    demotionSteps,
+    earnedTier,
+    inactiveDays,
+    lastEarnedDate,
+    nextTier,
+    progress,
+    pointsToNextTier: nextTier ? Math.max(0, nextTier.minimumPoints - state.user.lifetimePoints) : 0
+  };
 }
 
 function App() {
@@ -289,7 +299,6 @@ function App() {
   const [toasts, setToasts] = useState([]);
   const [earnQrOpen, setEarnQrOpen] = useState(false);
   const [redeemOpen, setRedeemOpen] = useState(null);
-  const [rewardCodeOpen, setRewardCodeOpen] = useState(null);
   const isNewDesign = location.pathname.startsWith("/new-design");
 
   const addToast = (message) => {
@@ -337,17 +346,14 @@ function App() {
             element={
               <RedeemScreen
                 points={state.points}
-                onSelectReward={(reward) => setRedeemOpen(reward)}
+                onSelectDiscount={(discount) => setRedeemOpen(discount)}
               />
             }
           />
           <Route
             path="/wallet"
             element={
-              <WalletScreen
-                wallet={state.wallet}
-                onOpen={(item) => setRewardCodeOpen(item)}
-              />
+              <WalletScreen />
             }
           />
           <Route
@@ -361,8 +367,6 @@ function App() {
             element={
               <NewDesignSite
                 state={state}
-                onSelectReward={(reward) => setRedeemOpen(reward)}
-                onOpenPocketItem={(item) => setRewardCodeOpen(item)}
               />
             }
           />
@@ -384,12 +388,9 @@ function App() {
           onClose={() => setRedeemOpen(null)}
           onRedeem={(reward) => {
             if (state.points < reward.points) {
-              addToast("Not enough points for this reward.");
+              addToast("Not enough points for this discount.");
               return;
             }
-            const code = `SS-${reward.id.slice(-2).toUpperCase()}-${
-              Math.floor(1000 + Math.random() * 9000)
-            }`;
             dispatch({
               type: "SPEND_POINTS",
               payload: {
@@ -397,36 +398,41 @@ function App() {
                 transaction: {
                   id: crypto.randomUUID(),
                   date: toLocalDateKey(),
-                  description: `Redeemed - ${reward.title}`,
+                  description: `Points Discount - ${reward.title}`,
                   points: -reward.points
-                },
-                walletItem: {
-                  id: crypto.randomUUID(),
-                  title: reward.title,
-                  status: "Ready",
-                  expires: "2026-07-15",
-                  code
                 }
               }
             });
-            addToast("Points redeemed successfully.");
-            setRewardCodeOpen({
-              title: reward.title,
-              code
-            });
+            addToast("Discount applied to transaction.");
             setRedeemOpen(null);
           }}
         />
       )}
 
-      {rewardCodeOpen && (
-        <RewardCodeModal
-          reward={rewardCodeOpen}
-          onClose={() => setRewardCodeOpen(null)}
-        />
-      )}
-
       <ToastStack toasts={toasts} />
+    </div>
+  );
+}
+
+function SupersamV2Mark({ compact = false }) {
+  return (
+    <div className="flex items-center">
+      {!compact && (
+        <p
+          className="text-2xl font-black uppercase leading-none tracking-[0.02em] text-[#f3c437]"
+          style={{ WebkitTextStroke: "1.5px #11100b", textShadow: "0 2px 0 #11100b" }}
+        >
+          SUPERSAM
+        </p>
+      )}
+      {compact && (
+        <p
+          className="text-xl font-black uppercase leading-none tracking-[0.02em] text-[#f3c437]"
+          style={{ WebkitTextStroke: "1px #11100b", textShadow: "0 1px 0 #11100b" }}
+        >
+          SUPERSAM
+        </p>
+      )}
     </div>
   );
 }
@@ -448,7 +454,7 @@ function SplashScreen() {
           Supersam
         </p>
         <h1 className="font-display text-3xl">Loyalty Atelier</h1>
-        <p className="text-sm text-white/60">Crafted rewards for modern dining.</p>
+        <p className="text-sm text-white/60">Points, tiers, and dining discounts.</p>
       </div>
       <button
         className="mt-12 rounded-full border border-white/20 px-5 py-2 text-xs text-white/70 transition hover:border-brand-gold/60"
@@ -473,7 +479,7 @@ function LoginScreen({ onLogin }) {
             Elevated dining, rewarded.
           </h1>
           <p className="text-sm text-white/70">
-            Sign in to access your premium rewards and curated experiences.
+            Sign in to access points, member tiers, and bill discounts.
           </p>
         </div>
 
@@ -560,7 +566,7 @@ function HomeScreen({ state, onEarnQr }) {
               className="mt-6 flex w-full items-center justify-between rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-sm text-white transition"
               onClick={() => navigate("/wallet")}
             >
-              Rewards Pocket
+              Discount History
               <ChevronRight size={16} />
             </button>
           </section>
@@ -580,12 +586,12 @@ function HomeScreen({ state, onEarnQr }) {
           />
           <QuickAction
             icon={<Gift size={18} />}
-            label="Redeem"
+            label="Discount"
             onClick={() => navigate("/redeem")}
           />
           <QuickAction
             icon={<Wallet size={18} />}
-            label="Pocket"
+            label="Ledger"
             onClick={() => navigate("/wallet")}
           />
         </div>
@@ -675,7 +681,7 @@ function BrandsScreen() {
       activePromotion: {
         title: "Dessert Cart Encore",
         date: "2026-05-10",
-        detail: "Members can redeem a rotating dessert cart item after dinner service."
+        detail: "Members can apply points as a bill discount after dinner service."
       },
       incomingPromotion: {
         title: "Chef's Seasonal Pasta",
@@ -805,92 +811,47 @@ function PromotionPanel({ label, icon, promotion }) {
   );
 }
 
-function RedeemScreen({ points, onSelectReward }) {
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [query, setQuery] = useState("");
-
-  const filteredRewards = rewards.filter((reward) => {
-    const matchesCategory =
-      activeCategory === "All" || reward.category === activeCategory;
-    const matchesQuery = reward.title
-      .toLowerCase()
-      .includes(query.toLowerCase());
-    return matchesCategory && matchesQuery;
-  });
-
+function RedeemScreen({ points, onSelectDiscount }) {
   return (
     <div className="space-y-6 animate-fadeUp">
       <header className="space-y-1">
-        <h2 className="font-display text-2xl">Redeem Menu Items</h2>
+        <h2 className="font-display text-2xl">Transaction Discounts</h2>
         <p className="text-sm text-white/60">
-          Choose specific dishes and drinks, paid with your points.
+          Use points as bill discounts at checkout. Product redemption is not available yet.
         </p>
       </header>
 
       <div className="glass-card rounded-3xl p-4 shadow-soft">
-        <div className="flex items-center gap-3">
-          <Filter size={16} className="text-brand-gold" />
-          <input
-            className="w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-xs text-white placeholder:text-white/40"
-            placeholder="Search menu items"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </div>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`rounded-full px-3 py-1 text-[11px] tracking-[0.2em] transition ${
-                activeCategory === category
-                  ? "bg-brand-gold text-brand-dark"
-                  : "border border-white/10 text-white/60"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+        <p className="text-xs tracking-[0.25em] text-brand-gold/70">AVAILABLE POINTS</p>
+        <p className="mt-2 text-3xl font-black">{formatPoints(points)}</p>
+        <p className="mt-1 text-sm text-white/60">
+          Present your member QR before payment and choose how many points to apply.
+        </p>
       </div>
 
       <div className="grid gap-4">
-        {filteredRewards.map((reward) => (
+        {discountOptions.map((discount) => (
           <button
-            key={reward.id}
-            className="group glass-card overflow-hidden rounded-3xl text-left shadow-soft transition hover:-translate-y-1"
-            onClick={() => onSelectReward(reward)}
+            key={discount.id}
+            className="glass-card rounded-3xl p-5 text-left shadow-soft transition hover:-translate-y-1"
+            onClick={() => onSelectDiscount(discount)}
           >
-            <div className="relative">
-              <img
-                src={reward.image}
-                alt={reward.title}
-                className="h-32 w-full object-cover"
-              />
-              <span className="absolute left-4 top-4 rounded-full bg-brand-gold px-3 py-1 text-[10px] tracking-[0.25em] text-brand-dark">
-                {reward.tag}
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-base font-semibold">{discount.title}</h3>
+                <p className="mt-1 text-xs text-white/60">
+                  Apply {formatPoints(discount.points)} points as a transaction discount.
+                </p>
+              </div>
+              <span className="rounded-full bg-brand-gold px-3 py-1 text-[11px] tracking-[0.16em] text-brand-dark">
+                {formatPoints(discount.points)}
               </span>
             </div>
-            <div className="space-y-3 p-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold">{reward.title}</h3>
-                <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] tracking-[0.2em] text-white/70">
-                  {reward.category}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-xs text-white/60">
-                <span>{formatPoints(reward.points)} pts</span>
-                <span className="flex items-center gap-1 text-brand-gold">
-                  View
-                  <ChevronRight size={14} />
-                </span>
-              </div>
-              {points < reward.points && (
-                <p className="text-[11px] text-rose-200">
-                  You need {formatPoints(reward.points - points)} more points.
-                </p>
-              )}
-            </div>
+            {points < discount.points && (
+              <p className="mt-3 text-[11px] text-rose-200">
+                You need {formatPoints(discount.points - points)} more points.
+              </p>
+            )}
           </button>
         ))}
       </div>
@@ -905,7 +866,7 @@ function RedeemModal({ reward, onClose, onRedeem }) {
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs tracking-[0.3em] text-brand-gold/70">
-              Menu Item
+              Transaction Discount
             </p>
             <h3 className="mt-2 font-display text-xl">{reward.title}</h3>
           </div>
@@ -918,85 +879,33 @@ function RedeemModal({ reward, onClose, onRedeem }) {
         </div>
         <div className="mt-4 flex items-center justify-between text-sm text-white/70">
           <span>{formatPoints(reward.points)} pts</span>
-          <span className="text-brand-gold">{reward.category}</span>
+          <span className="text-brand-gold">Bill discount</span>
         </div>
         <button
           className="mt-6 w-full rounded-2xl bg-brand-gold py-2 text-sm font-semibold text-brand-dark transition active:scale-95"
           onClick={() => onRedeem(reward)}
         >
-          Redeem Now
+          Apply Discount
         </button>
       </div>
     </div>
   );
 }
 
-function RewardCodeModal({ reward, onClose }) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-white/50 px-6 pb-8">
-      <div className="glass-card w-full max-w-sm rounded-3xl p-6 shadow-soft animate-fadeUp">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-xs tracking-[0.3em] text-brand-gold/70">
-              Reward Access
-            </p>
-            <h3 className="mt-2 font-display text-xl">{reward.title}</h3>
-          </div>
-          <button
-            className="rounded-full bg-white/10 px-3 py-1 text-xs text-white/70"
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
-        <div className="mt-5 flex flex-col items-center gap-3">
-          <QrPlaceholder value={reward.code} />
-          <p className="text-xs text-white/60">Show this Qr to redeem.</p>
-        </div>
-        <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm">
-          {reward.code}
-        </div>
-        <button
-          className="mt-5 w-full rounded-2xl bg-brand-gold py-2 text-sm font-semibold text-brand-dark transition active:scale-95"
-          onClick={onClose}
-        >
-          Done
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function WalletScreen({ wallet, onOpen }) {
+function WalletScreen() {
   return (
     <div className="space-y-6 animate-fadeUp">
       <header className="space-y-1">
-        <h2 className="font-display text-2xl">Rewards Pocket</h2>
+        <h2 className="font-display text-2xl">Discount History</h2>
         <p className="text-sm text-white/60">
-          Your redeemed rewards and vouchers.
+          Stored discount passes are disabled for now. Point use appears as transaction discounts.
         </p>
       </header>
-      <div className="space-y-3">
-        {wallet.map((item) => (
-          <button
-            key={item.id}
-            className="glass-card w-full rounded-3xl p-5 text-left shadow-soft transition hover:-translate-y-1"
-            onClick={() => onOpen(item)}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">{item.title}</h3>
-              <span className="rounded-full bg-brand-gold/20 px-3 py-1 text-[10px] tracking-[0.2em] text-brand-gold">
-                {item.status}
-              </span>
-            </div>
-            <div className="mt-3 flex items-center justify-between text-xs text-white/60">
-              <span>Expires {formatDate(item.expires)}</span>
-              <span className="rounded-full border border-white/10 px-3 py-1">
-                {item.code}
-              </span>
-            </div>
-          </button>
-        ))}
+      <div className="glass-card rounded-3xl p-5 shadow-soft">
+        <p className="text-sm font-semibold">No stored discount passes.</p>
+        <p className="mt-2 text-xs leading-5 text-white/60">
+          Ask the cashier to apply points to the bill before payment. The discount will be recorded in your ledger.
+        </p>
       </div>
     </div>
   );
@@ -1006,6 +915,7 @@ function NewDesignSite({ state }) {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState("Home");
+  const [isLightMode, setIsLightMode] = useState(false);
   const [message, setMessage] = useState("");
 
   const tabs = [
@@ -1024,15 +934,10 @@ function NewDesignSite({ state }) {
 
   if (isAuthenticated) {
     return (
-      <main className="new-design -mx-5 min-h-screen bg-[#11100b] pb-28 text-[#f8f5ec]">
+      <main className={`new-design -mx-5 min-h-screen bg-[#11100b] pb-28 text-[#f8f5ec] ${isLightMode ? "v2-light" : ""}`}>
         <header className="sticky top-0 z-30 border-b border-[#f3c437]/20 bg-[#11100b]/95 px-5 pb-4 pt-5 backdrop-blur">
           <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#f3c437]">
-                Supersam SuperApp
-              </p>
-              <h1 className="mt-1 text-2xl font-black text-white">{activeTab}</h1>
-            </div>
+            <SupersamV2Mark compact />
             <button
               className="rounded-full border border-[#f3c437]/35 bg-[#f3c437] px-4 py-2 text-xs font-black text-[#11100b] shadow-sm"
               onClick={() => setIsAuthenticated(false)}
@@ -1043,11 +948,23 @@ function NewDesignSite({ state }) {
         </header>
 
         <section className="px-5 pt-5">
-          {activeTab === "Home" && <V2HomeTab state={state} />}
+          {activeTab === "Home" && (
+            <V2HomeTab
+              state={state}
+              onOpenLedger={() => setActiveTab("Ledger")}
+              onOpenQr={() => setActiveTab("QR")}
+            />
+          )}
           {activeTab === "Transactions" && <V2TransactionsTab transactions={state.transactions} />}
           {activeTab === "QR" && <V2QrTab user={state.user} />}
           {activeTab === "Ledger" && <V2LedgerTab state={state} />}
-          {activeTab === "My Account" && <V2AccountTab state={state} />}
+          {activeTab === "My Account" && (
+            <V2AccountTab
+              state={state}
+              isLightMode={isLightMode}
+              onLightModeChange={setIsLightMode}
+            />
+          )}
         </section>
 
         <nav className="fixed bottom-0 left-0 right-0 z-40 mx-auto max-w-md border-t border-[#f3c437]/20 bg-[#18150d] px-3 pb-5 pt-3 shadow-[0_-12px_28px_rgba(0,0,0,0.35)]">
@@ -1077,7 +994,7 @@ function NewDesignSite({ state }) {
   return (
     <main className="new-design -mx-5 min-h-screen bg-[#11100b] px-5 py-6 text-[#f8f5ec]">
       <header className="flex items-center justify-between">
-        <h1 className="text-xl font-black text-white">SuperApp V2</h1>
+        <SupersamV2Mark />
         <button
           className="rounded-full border border-[#f3c437]/35 px-4 py-2 text-xs font-black text-[#f3c437]"
           onClick={() => navigate("/login")}
@@ -1147,7 +1064,9 @@ function NewDesignSite({ state }) {
   );
 }
 
-function V2HomeTab({ state }) {
+function V2HomeTab({ state, onOpenLedger, onOpenQr }) {
+  const tierStatus = useMemo(() => getTierStatus(state), [state]);
+  const latestEarned = state.transactions.find((transaction) => transaction.points > 0);
   const banners = [
     {
       title: "Double points lunch",
@@ -1157,56 +1076,292 @@ function V2HomeTab({ state }) {
     },
     {
       title: "Chef's weekend table",
-      detail: "Redeem signature dishes with points at participating branches.",
+      detail: "Use points as bill discounts at participating branches.",
       image:
         "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80"
     }
   ];
 
   return (
-    <div className="space-y-5 animate-fadeUp">
+    <div className="space-y-4 animate-fadeUp">
       <section className="overflow-hidden rounded-[1.5rem] border border-[#f3c437]/20 bg-[#f3c437] text-[#11100b] shadow-soft">
         <div className="p-5">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-black/55">
-            Total available points
+            Available points
           </p>
-          <div className="mt-3 flex items-end justify-between gap-3">
+          <div className="mt-3 flex items-start justify-between gap-3">
             <div>
               <p className="text-5xl font-black leading-none">{formatPoints(state.points)}</p>
-              <p className="mt-2 text-sm font-bold text-black/60">{state.user.tier} member</p>
+              <p className="mt-2 text-sm font-bold text-black/60">
+                {tierStatus.activeTier.name} member - P{tierStatus.activeTier.pesoPerPoint} = 1 pt
+              </p>
             </div>
             <Wallet size={30} strokeWidth={2.3} />
           </div>
+
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            <button
+              className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#11100b] px-3 py-3 text-sm font-black text-[#f3c437] transition active:scale-95"
+              onClick={onOpenQr}
+            >
+              <QrCode size={17} strokeWidth={2.4} />
+              Show QR
+            </button>
+            <button
+              className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-black/20 bg-white/45 px-3 py-3 text-sm font-black text-[#11100b] transition active:scale-95"
+              onClick={onOpenLedger}
+            >
+              <Ticket size={17} strokeWidth={2.4} />
+              Ledger
+            </button>
+          </div>
         </div>
+
         <div className="grid grid-cols-2 border-t border-black/15 bg-[#11100b] text-[#f8f5ec]">
-          <div>
-            <p className="px-4 pt-4 text-[11px] font-black uppercase tracking-[0.16em] text-[#f3c437]">
-              Lifetime
-            </p>
-            <p className="px-4 pb-4 pt-1 text-lg font-black">{formatPoints(state.user.lifetimePoints)}</p>
-          </div>
-          <div className="border-l border-[#f3c437]/20">
-            <p className="px-4 pt-4 text-[11px] font-black uppercase tracking-[0.16em] text-[#f3c437]">
-              Wallet
-            </p>
-            <p className="px-4 pb-4 pt-1 text-lg font-black">{state.wallet.length} rewards</p>
-          </div>
+          <V2HomeMetric label="Lifetime" value={formatPoints(state.user.lifetimePoints)} />
+          <V2HomeMetric
+            label="Last Earned"
+            value={latestEarned ? `+${formatPoints(latestEarned.points)}` : "None"}
+          />
+        </div>
+      </section>
+
+      <section className="grid grid-cols-2 gap-3">
+        <div className="rounded-[1.25rem] border border-[#f3c437]/15 bg-[#1a1710] p-4 shadow-sm">
+          <p className="text-[11px] font-black uppercase tracking-[0.15em] text-[#f3c437]">Next Tier</p>
+          <p className="mt-2 text-lg font-black text-white">
+            {tierStatus.nextTier ? tierStatus.nextTier.name : "Unlocked"}
+          </p>
+          <p className="mt-1 text-xs font-semibold leading-5 text-[#f8f5ec]/45">
+            {tierStatus.nextTier
+              ? `${formatPoints(tierStatus.pointsToNextTier)} pts left`
+              : "Highest member tier"}
+          </p>
+        </div>
+        <div className="rounded-[1.25rem] border border-[#f3c437]/15 bg-[#1a1710] p-4 shadow-sm">
+          <p className="text-[11px] font-black uppercase tracking-[0.15em] text-[#f3c437]">Spend To Go</p>
+          <p className="mt-2 text-lg font-black text-white">
+            {tierStatus.nextTier
+              ? `P${formatCompactNumber(tierStatus.pointsToNextTier * tierStatus.activeTier.pesoPerPoint)}`
+              : "Top tier"}
+          </p>
+          <p className="mt-1 text-xs font-semibold leading-5 text-[#f8f5ec]/45">
+            At P{tierStatus.activeTier.pesoPerPoint} = 1 pt
+          </p>
+        </div>
+      </section>
+
+      <TierStatusGauge status={tierStatus} />
+
+      <section className="rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 shadow-sm">
+        <div className="flex items-center justify-between gap-4">
+          <V2SectionTitle title="Tier path" />
+          <span className="rounded-full border border-[#f3c437]/25 px-3 py-1 text-xs font-black text-[#f3c437]">
+            {tierStatus.activeTier.name}
+          </span>
+        </div>
+
+        <div className="mt-5 grid grid-cols-4 gap-2">
+          {memberTiers.map((tier, index) => {
+            const isActive = tier.name === tierStatus.activeTier.name;
+            const isUnlocked = index <= tierStatus.activeTierIndex;
+            return (
+              <div
+                key={tier.name}
+                className={`rounded-2xl border px-2 py-3 text-center ${
+                  isActive
+                    ? "border-[#f3c437] bg-[#f3c437] text-[#11100b]"
+                    : "border-[#f3c437]/15 bg-[#11100b] text-[#f8f5ec]"
+                }`}
+              >
+                <span
+                  className="mx-auto block h-2 w-2 rounded-full"
+                  style={{ backgroundColor: isUnlocked ? tier.accent : "#5b5039" }}
+                />
+                <p className="mt-2 text-[11px] font-black">{tier.name}</p>
+                <p className={`mt-1 text-[10px] font-bold ${isActive ? "text-black/55" : "text-[#f8f5ec]/40"}`}>
+                  {formatPoints(tier.minimumPoints)}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-5 divide-y divide-[#f3c437]/15">
+          {memberTiers.map((tier) => {
+            const isActive = tier.name === tierStatus.activeTier.name;
+            return (
+              <div key={tier.name} className="grid grid-cols-[1fr_auto] items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <div className="min-w-0">
+                  <p className="text-sm font-black text-white">{tier.name}</p>
+                  <p className="mt-0.5 text-xs font-semibold text-[#f8f5ec]/45">
+                    {formatPoints(tier.minimumPoints)} lifetime points
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-black text-[#f3c437]">P{tier.pesoPerPoint}:1</p>
+                  <p className="mt-0.5 text-[11px] font-bold text-[#f8f5ec]/40">
+                    {isActive ? "Current rate" : "earn rate"}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
       <section className="space-y-3">
-        <V2SectionTitle title="Promotions" />
-        {banners.map((banner) => (
-          <article key={banner.title} className="overflow-hidden rounded-[1.35rem] border border-[#f3c437]/20 bg-[#1a1710] shadow-sm">
-            <img src={banner.image} alt={banner.title} className="h-36 w-full object-cover" />
-            <div className="p-4">
-              <h2 className="text-base font-black text-white">{banner.title}</h2>
-              <p className="mt-1 text-sm font-semibold leading-6 text-[#f8f5ec]/55">{banner.detail}</p>
-            </div>
-          </article>
-        ))}
+        <div className="flex items-center justify-between gap-3">
+          <V2SectionTitle title="Promotions" />
+          <ChevronRight className="text-[#f3c437]" size={19} strokeWidth={2.4} />
+        </div>
+        <div className="space-y-3">
+          {banners.map((banner) => (
+            <article key={banner.title} className="grid grid-cols-[6.5rem_1fr] overflow-hidden rounded-[1.25rem] border border-[#f3c437]/20 bg-[#1a1710] shadow-sm">
+              <img src={banner.image} alt={banner.title} className="h-full min-h-[7rem] w-full object-cover" />
+              <div className="p-4">
+                <h2 className="text-sm font-black text-white">{banner.title}</h2>
+                <p className="mt-1 text-xs font-semibold leading-5 text-[#f8f5ec]/55">{banner.detail}</p>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
     </div>
+  );
+}
+
+function V2HomeMetric({ label, value }) {
+  return (
+    <div className="border-r border-[#f3c437]/15 px-3 py-4 last:border-r-0">
+      <p className="text-[10px] font-black uppercase tracking-[0.13em] text-[#f3c437]">{label}</p>
+      <p className="mt-1 truncate text-sm font-black text-white">{value}</p>
+    </div>
+  );
+}
+
+function TierStatusGauge({ status }) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const strokeOffset = 100 - status.progress * 100;
+  const activeRate = `P${status.activeTier.pesoPerPoint} spend = 1 point`;
+  const reviewMessage = status.demotionSteps > 0
+    ? `Demoted ${status.demotionSteps} tier${status.demotionSteps === 1 ? "" : "s"} after ${status.inactiveDays} inactive days.`
+    : `${status.demotionDueIn} day${status.demotionDueIn === 1 ? "" : "s"} until demotion review.`;
+  const nextGoal = status.nextTier
+    ? `${formatPoints(status.pointsToNextTier)} pts to ${status.nextTier.name}`
+    : "Top tier unlocked";
+
+  return (
+    <section className="overflow-hidden rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] shadow-sm">
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f3c437]">
+              Membership tier
+            </p>
+            <h2 className="mt-2 text-2xl font-black text-white">{status.activeTier.name}</h2>
+            <p className="mt-1 text-sm font-semibold text-[#f8f5ec]/50">{activeRate}</p>
+          </div>
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#f3c437] text-[#11100b]">
+            <Crown size={22} strokeWidth={2.4} />
+          </div>
+        </div>
+
+        <div className="relative mx-auto mt-5 h-36 max-w-[17rem]">
+          <svg viewBox="0 0 256 144" className="h-full w-full">
+            <path
+              d="M24 124A104 104 0 0 1 232 124"
+              fill="none"
+              pathLength="100"
+              stroke="rgba(248,245,236,0.12)"
+              strokeLinecap="round"
+              strokeWidth="18"
+            />
+            <path
+              d="M24 124A104 104 0 0 1 232 124"
+              fill="none"
+              pathLength="100"
+              stroke={status.activeTier.accent}
+              strokeDasharray="100"
+              strokeDashoffset={strokeOffset}
+              strokeLinecap="round"
+              strokeWidth="18"
+            />
+            {memberTiers.map((tier, index) => {
+              const angle = Math.PI - (Math.PI * index) / (memberTiers.length - 1);
+              const x = 128 + Math.cos(angle) * 104;
+              const y = 124 - Math.sin(angle) * 104;
+              const isUnlocked = index <= status.activeTierIndex;
+              return (
+                <circle
+                  key={tier.name}
+                  cx={x}
+                  cy={y}
+                  fill={isUnlocked ? tier.accent : "#302a1a"}
+                  r={isUnlocked ? 6 : 4.5}
+                  stroke="#11100b"
+                  strokeWidth="3"
+                />
+              );
+            })}
+          </svg>
+
+          <div className="absolute inset-x-0 bottom-0 text-center">
+            <p className="text-4xl font-black leading-none text-white">
+              {Math.round(status.progress * 100)}%
+            </p>
+            <p className="mt-1 text-xs font-black uppercase tracking-[0.16em] text-[#f3c437]">
+              {nextGoal}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-[#f3c437]/15 bg-[#11100b]">
+        <button
+          className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left"
+          type="button"
+          aria-expanded={detailsOpen}
+          onClick={() => setDetailsOpen((isOpen) => !isOpen)}
+        >
+          <span className="text-[11px] font-black uppercase tracking-[0.14em] text-[#f3c437]">
+            Activity & demotion
+          </span>
+          <ChevronRight
+            className={`shrink-0 text-[#f3c437] transition ${detailsOpen ? "rotate-90" : ""}`}
+            size={17}
+            strokeWidth={2.4}
+          />
+        </button>
+
+        {detailsOpen && (
+          <div className="grid grid-cols-2 border-t border-[#f3c437]/15">
+            <div className="p-4">
+              <p className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-[#f3c437]">
+                <CalendarDays size={13} />
+                Activity
+              </p>
+              <p className="mt-2 text-sm font-black text-white">
+                {formatShortDate(toLocalDateKey(status.lastEarnedDate))}
+              </p>
+              <p className="mt-1 text-xs font-semibold text-[#f8f5ec]/45">
+                Last points earned
+              </p>
+            </div>
+            <div className="border-l border-[#f3c437]/15 p-4">
+              <p className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-[#f3c437]">
+                <Star size={13} />
+                Demotion
+              </p>
+              <p className="mt-2 text-sm font-black text-white">{reviewMessage}</p>
+              <p className="mt-1 text-xs font-semibold text-[#f8f5ec]/45">
+                Earn any points to reset timer
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -1228,6 +1383,18 @@ function V2TransactionsTab({ transactions }) {
 
 function V2QrTab({ user }) {
   const memberCode = `SS-V2-${user.name.replace(/\s/g, "").toUpperCase()}-2045`;
+  const downloadQr = () => {
+    const svg = createQrDownloadSvg(memberCode, user);
+    const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${memberCode.toLowerCase()}-qr.svg`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="space-y-5 animate-fadeUp">
@@ -1240,9 +1407,77 @@ function V2QrTab({ user }) {
         <div className="mt-4 rounded-2xl border border-[#f3c437]/20 bg-[#11100b] px-4 py-3 text-sm font-black text-[#f3c437]">
           {memberCode}
         </div>
+        <button
+          className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#f3c437] px-4 py-3 text-sm font-black text-[#11100b] transition active:scale-95"
+          type="button"
+          onClick={downloadQr}
+        >
+          <Download size={17} strokeWidth={2.4} />
+          Download QR
+        </button>
       </section>
     </div>
   );
+}
+
+function createQrDownloadSvg(memberCode, user) {
+  const size = 184;
+  const padding = 32;
+  const width = size + padding * 2;
+  const height = size + padding * 2 + 96;
+  const cells = 21;
+  const cell = size / cells;
+  let seed = 0;
+  for (let i = 0; i < memberCode.length; i += 1) {
+    seed = (seed * 31 + memberCode.charCodeAt(i)) % 2147483647;
+  }
+
+  const isFinder = (x, y) => (
+    (x < 7 && y < 7) ||
+    (x > cells - 8 && y < 7) ||
+    (x < 7 && y > cells - 8)
+  );
+  const finderSvg = (x, y) => {
+    const finderSize = cell * 7;
+    return `
+      <rect x="${x}" y="${y}" width="${finderSize}" height="${finderSize}" fill="#010812"/>
+      <rect x="${x + cell}" y="${y + cell}" width="${finderSize - cell * 2}" height="${finderSize - cell * 2}" fill="#ffffff"/>
+      <rect x="${x + cell * 2}" y="${y + cell * 2}" width="${finderSize - cell * 4}" height="${finderSize - cell * 4}" fill="#010812"/>
+    `;
+  };
+
+  const modules = [];
+  for (let y = 0; y < cells; y += 1) {
+    for (let x = 0; x < cells; x += 1) {
+      if (isFinder(x, y)) continue;
+      seed = (seed * 1103515245 + 12345) % 2147483647;
+      if (seed % 2 === 0) {
+        modules.push(`<rect x="${x * cell}" y="${y * cell}" width="${cell}" height="${cell}" fill="#010812"/>`);
+      }
+    }
+  }
+
+  const escapeSvgText = (value) => String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <rect width="${width}" height="${height}" rx="28" fill="#11100b"/>
+      <text x="${padding}" y="34" fill="#f3c437" font-family="Arial, sans-serif" font-size="18" font-weight="800">SUPERSAM</text>
+      <g transform="translate(${padding} 56)">
+        <rect width="${size}" height="${size}" fill="#ffffff"/>
+        ${finderSvg(0, 0)}
+        ${finderSvg((cells - 7) * cell, 0)}
+        ${finderSvg(0, (cells - 7) * cell)}
+        ${modules.join("")}
+      </g>
+      <text x="${width / 2}" y="${height - 54}" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="800" text-anchor="middle">${escapeSvgText(user.name)}</text>
+      <text x="${width / 2}" y="${height - 28}" fill="#f3c437" font-family="Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle">${escapeSvgText(memberCode)}</text>
+    </svg>
+  `;
 }
 
 function V2LedgerTab({ state }) {
@@ -1281,7 +1516,7 @@ function V2LedgerTab({ state }) {
   );
 }
 
-function V2AccountTab({ state }) {
+function V2AccountTab({ state, isLightMode, onLightModeChange }) {
   const settings = ["Push notifications", "Email receipts", "Location-based offers"];
 
   return (
@@ -1308,6 +1543,15 @@ function V2AccountTab({ state }) {
       <section className="rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] p-5 shadow-sm">
         <V2SectionTitle title="Settings" />
         <div className="mt-3 space-y-3">
+          <label className="flex items-center justify-between gap-3 text-sm font-black text-[#f8f5ec]">
+            <span>Light mode</span>
+            <input
+              checked={isLightMode}
+              className="h-5 w-5 accent-[#f3c437]"
+              type="checkbox"
+              onChange={(event) => onLightModeChange(event.target.checked)}
+            />
+          </label>
           {settings.map((setting) => (
             <label key={setting} className="flex items-center justify-between gap-3 text-sm font-black text-[#f8f5ec]">
               <span>{setting}</span>
@@ -1433,15 +1677,7 @@ function RewardsProfileRow({ label, value }) {
 function LegacyNewDesignSite({ state }) {
   const navigate = useNavigate();
   const [activeView, setActiveView] = useState("Home");
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [query, setQuery] = useState("");
   const previewTransactions = state.transactions.slice(0, 4);
-  const filteredRewards = rewards.filter((reward) => {
-    const matchesCategory =
-      activeCategory === "All" || reward.category === activeCategory;
-    const matchesQuery = reward.title.toLowerCase().includes(query.toLowerCase());
-    return matchesCategory && matchesQuery;
-  });
   const brandCards = [
     {
       name: "Supersam Bonifacio",
@@ -1472,13 +1708,13 @@ function LegacyNewDesignSite({ state }) {
     { label: "Home", icon: Home },
     { label: "Transactions", icon: Ticket },
     { label: "Brands", icon: Store },
-    { label: "Redeem", icon: Gift },
+    { label: "Discount", icon: Gift },
     { label: "Profile", icon: User }
   ];
   const showHome = activeView === "Home";
   const showTransactions = activeView === "Transactions";
   const showBrands = activeView === "Brands";
-  const showRedeem = activeView === "Redeem";
+  const showRedeem = activeView === "Discount";
   const showProfile = activeView === "Profile";
 
   return (
@@ -1493,7 +1729,7 @@ function LegacyNewDesignSite({ state }) {
               {showHome && "Hi, Gerry"}
               {showTransactions && "Transactions"}
               {showBrands && "Brands"}
-              {showRedeem && "Redeem"}
+              {showRedeem && "Discount"}
               {showProfile && "Profile"}
             </h1>
           </div>
@@ -1518,12 +1754,12 @@ function LegacyNewDesignSite({ state }) {
               />
               <V2ActionButton
                 icon={<Gift size={20} strokeWidth={2.25} />}
-                label="Redeem"
-                onClick={() => setActiveView("Redeem")}
+                label="Discount"
+                onClick={() => setActiveView("Discount")}
               />
               <V2ActionButton
                 icon={<Wallet size={20} strokeWidth={2.25} />}
-                label="Pocket"
+                label="Ledger"
                 onClick={() => setActiveView("Profile")}
               />
             </div>
@@ -1574,47 +1810,26 @@ function LegacyNewDesignSite({ state }) {
         {showRedeem && (
           <>
             <div className="rounded-[1.5rem] border border-black/10 bg-white p-4">
-              <div className="flex items-center gap-3">
-                <Filter size={16} strokeWidth={2.35} />
-                <input
-                  className="w-full border-0 bg-transparent p-0 text-sm font-semibold text-black placeholder:text-black/40 focus:ring-0"
-                  placeholder="Search menu items"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                />
-              </div>
-              <div className="mt-4 flex gap-2 overflow-x-auto">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    className={`shrink-0 rounded-full px-3 py-2 text-xs font-black ${
-                      activeCategory === category
-                        ? "bg-brand-gold"
-                        : "border border-black/10 bg-white text-black/55"
-                    }`}
-                    onClick={() => setActiveCategory(category)}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-black/50">
+                Transaction discounts
+              </p>
+              <p className="mt-2 text-sm font-semibold text-black/60">
+                Apply points directly to the bill. Product redemption is not active.
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {filteredRewards.map((reward) => (
+              {discountOptions.map((discount) => (
                 <button
-                  key={reward.id}
-                  className="overflow-hidden rounded-[1.35rem] border border-black/10 bg-white text-left"
+                  key={discount.id}
+                  className="rounded-[1.35rem] border border-black/10 bg-white p-4 text-left"
                   onClick={() => setActiveView("Profile")}
                 >
-                  <img src={reward.image} alt={reward.title} className="h-28 w-full object-cover" />
-                  <div className="p-3">
-                    <p className="min-h-10 text-sm font-black leading-5">{reward.title}</p>
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="text-xs font-bold text-black/50">{reward.category}</span>
-                      <span className="rounded-full bg-black px-2 py-1 text-[11px] font-black text-[#fbe106]">
-                        {formatPoints(reward.points)}
-                      </span>
-                    </div>
+                  <p className="min-h-10 text-sm font-black leading-5">{discount.title}</p>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="text-xs font-bold text-black/50">Bill discount</span>
+                    <span className="rounded-full bg-black px-2 py-1 text-[11px] font-black text-[#fbe106]">
+                      {formatPoints(discount.points)}
+                    </span>
                   </div>
                 </button>
               ))}
@@ -1643,17 +1858,10 @@ function LegacyNewDesignSite({ state }) {
               </div>
             </section>
             <section className="rounded-[1.5rem] border border-black/10 bg-white p-5">
-              <V2SectionHeader title="Pocket" action={`${state.wallet.length} ready`} onClick={() => setActiveView("Redeem")} />
-              <div className="mt-2 divide-y divide-black/10">
-                {state.wallet.map((item) => (
-                  <div key={item.id} className="py-3">
-                    <p className="text-sm font-black">{item.title}</p>
-                    <p className="mt-1 text-xs font-semibold text-black/50">
-                      Expires {formatDate(item.expires)} · {item.code}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              <V2SectionHeader title="Discounts" action="Open" onClick={() => setActiveView("Discount")} />
+              <p className="mt-2 text-sm font-semibold text-black/50">
+                Discount redemptions are recorded as points-discount transactions.
+              </p>
             </section>
             <button
               className="w-full rounded-full bg-black py-3 text-sm font-black text-[#fbe106]"
@@ -1842,7 +2050,7 @@ function ProfileScreen({ state }) {
         className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-black/5 py-3 text-sm text-white transition active:scale-95"
         onClick={() => navigate("/wallet")}
       >
-        <Wallet size={16} /> Rewards Pocket
+        <Wallet size={16} /> Discount History
       </button>
 
       <button
@@ -1871,7 +2079,7 @@ function BottomNav() {
     { to: "/home", label: "Home", icon: Home },
     { to: "/transactions", label: "Transactions", icon: Ticket },
     { to: "/brands", label: "Brands", icon: Store },
-    { to: "/redeem", label: "Redeem", icon: Gift },
+    { to: "/redeem", label: "Discount", icon: Gift },
     { to: "/profile", label: "Profile", icon: User }
   ];
 
