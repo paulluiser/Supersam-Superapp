@@ -1242,7 +1242,11 @@ function V2HomeMetric({ label, value }) {
 
 function TierStatusGauge({ status }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const strokeOffset = 100 - status.progress * 100;
+  const displayProgress = 0.67;
+  const strokeOffset = 100 - displayProgress * 100;
+  const markerAngle = Math.PI - Math.PI * displayProgress;
+  const markerX = 128 + Math.cos(markerAngle) * 104;
+  const markerY = 124 - Math.sin(markerAngle) * 104;
   const activeRate = `P${status.activeTier.pesoPerPoint} spend = 1 point`;
   const reviewMessage = status.demotionSteps > 0
     ? `Demoted ${status.demotionSteps} tier${status.demotionSteps === 1 ? "" : "s"} after ${status.inactiveDays} inactive days.`
@@ -1252,7 +1256,7 @@ function TierStatusGauge({ status }) {
     : "Top tier unlocked";
 
   return (
-    <section className="overflow-hidden rounded-[1.5rem] border border-[#f3c437]/20 bg-[#1a1710] shadow-sm">
+    <section className="overflow-hidden rounded-[1.5rem] border border-[#f3c437]/25 bg-[#1a1710] shadow-[0_18px_42px_rgba(243,196,55,0.08)]">
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -1262,30 +1266,58 @@ function TierStatusGauge({ status }) {
             <h2 className="mt-2 text-2xl font-black text-white">{status.activeTier.name}</h2>
             <p className="mt-1 text-sm font-semibold text-[#f8f5ec]/50">{activeRate}</p>
           </div>
-          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#f3c437] text-[#11100b]">
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#f3c437] text-[#11100b] shadow-[0_0_24px_rgba(243,196,55,0.35)]">
             <Crown size={22} strokeWidth={2.4} />
           </div>
         </div>
 
-        <div className="relative mx-auto mt-5 h-36 max-w-[17rem]">
+        <div className="relative mx-auto mt-5 h-40 max-w-[18rem]">
           <svg viewBox="0 0 256 144" className="h-full w-full">
+            <defs>
+              <linearGradient id="tierProgressGradient" x1="24" x2="232" y1="124" y2="124" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#f3c437" />
+                <stop offset="58%" stopColor="#ff7a59" />
+                <stop offset="100%" stopColor="#7de3ff" />
+              </linearGradient>
+              <filter id="tierProgressGlow" x="-20%" y="-50%" width="140%" height="180%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feColorMatrix
+                  in="blur"
+                  type="matrix"
+                  values="1 0 0 0 0.95 0 1 0 0 0.77 0 0 1 0 0.22 0 0 0 0.75 0"
+                />
+                <feMerge>
+                  <feMergeNode />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
             <path
               d="M24 124A104 104 0 0 1 232 124"
               fill="none"
               pathLength="100"
-              stroke="rgba(248,245,236,0.12)"
+              stroke="rgba(248,245,236,0.1)"
               strokeLinecap="round"
-              strokeWidth="18"
+              strokeWidth="24"
             />
             <path
               d="M24 124A104 104 0 0 1 232 124"
               fill="none"
               pathLength="100"
-              stroke={status.activeTier.accent}
+              stroke="rgba(243,196,55,0.18)"
+              strokeLinecap="round"
+              strokeWidth="16"
+            />
+            <path
+              d="M24 124A104 104 0 0 1 232 124"
+              fill="none"
+              filter="url(#tierProgressGlow)"
+              pathLength="100"
+              stroke="url(#tierProgressGradient)"
               strokeDasharray="100"
               strokeDashoffset={strokeOffset}
               strokeLinecap="round"
-              strokeWidth="18"
+              strokeWidth="22"
             />
             {memberTiers.map((tier, index) => {
               const angle = Math.PI - (Math.PI * index) / (memberTiers.length - 1);
@@ -1298,17 +1330,22 @@ function TierStatusGauge({ status }) {
                   cx={x}
                   cy={y}
                   fill={isUnlocked ? tier.accent : "#302a1a"}
-                  r={isUnlocked ? 6 : 4.5}
+                  r={isUnlocked ? 7 : 4.5}
                   stroke="#11100b"
                   strokeWidth="3"
                 />
               );
             })}
+            <circle cx={markerX} cy={markerY} r="11" fill="#11100b" stroke="#f3c437" strokeWidth="4" />
+            <circle cx={markerX} cy={markerY} r="4" fill="#7de3ff" />
           </svg>
 
-          <div className="absolute inset-x-0 bottom-0 text-center">
-            <p className="text-4xl font-black leading-none text-white">
-              {Math.round(status.progress * 100)}%
+          <div className="absolute inset-x-0 bottom-1 text-center">
+            <p className="mx-auto w-fit rounded-full border border-[#f3c437]/25 bg-[#11100b]/80 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-[#7de3ff]">
+              On track
+            </p>
+            <p className="mt-2 text-5xl font-black leading-none text-white">
+              {Math.round(displayProgress * 100)}%
             </p>
             <p className="mt-1 text-xs font-black uppercase tracking-[0.16em] text-[#f3c437]">
               {nextGoal}
